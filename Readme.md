@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Богдан Моисеенко](https://up.htmlacademy.ru/javascript/17/user/1021437).
-* Наставник: `Неизвестно`.
+* Наставник: [Иван Чернобук] (https://htmlacademy.ru/profile/id237614).
 
 ---
 
