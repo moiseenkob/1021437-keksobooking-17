@@ -1,67 +1,100 @@
 'use strict';
 
-var COUNTHOUSE = 8;
-var TYPEHOUSE = ['palace', 'flat', 'house', 'bungalo'];
-var objectHouse = [];
-var MAP_SURF = document.querySelector('.map__pins');
+var COUNT_AD = 8;
+var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
+var Y_MAP_MIN = 130;
+var Y_MAP_MAX = 630;
+var MIN_VALUE = 1;
 
-/* Создал функцию генерации 8 объектов */
+/* Забираем данные из шаблона */
+var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapSurf = document.querySelector('.map__pins');
+
+/* Удаляем лишний класс, для удобной работы (ВРЕМЕННО) */
+document.querySelector('.map').classList.remove('map--faded');
+
+/* Функция рандомного числа */
+var randomCount = function (min, max) {
+  return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
+};
+
+
+/* Создал функцию с объявлениями 8 объектов */
 var createHouse = function (val) {
+  var objectHouse = [];
   for (var i = 1; i <= val; i++) {
     /* Добавил рандом типа жилья */
-    var randomTypeHoue = Math.round(0 + Math.random() * (TYPEHOUSE.length - 1));
-    var createHome = {
+
+    var item = {
       'author': {
         'avatar': 'img/avatars/user0' + i + '.png'
       },
       'offer': {
-        'type': TYPEHOUSE[randomTypeHoue]
+        'type': TYPE_HOUSE[randomCount(0, TYPE_HOUSE.length - MIN_VALUE)]
       },
       'location': {
-        'x': (Math.round(1 - 0.5 + Math.random() * (MAP_SURF.clientWidth - 50)) + 'px'),
-        'y': (Math.round(130 - 0.5 + Math.random() * (630 - 130 + 1)) + 'px')
+        'x': randomCount(MIN_VALUE, mapSurf.clientWidth),
+        'y': randomCount(Y_MAP_MIN, Y_MAP_MAX)
       }
     };
+
     /* Добаввляем наши объекты в массив */
-    objectHouse.push(createHome);
+    objectHouse.push(item);
   }
 
   return objectHouse;
 };
 
-/* Удаляем лишний класс, для удобной работы (ВРЕМЕННО) */
-document.querySelector('.map').classList.remove('map--faded');
+var createFragment = function (arr) {
 
-/* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNTHOUSE" */
-createHouse(COUNTHOUSE);
+  /* Создали фрагмент для добавление наших домов */
+  var fragment = document.createDocumentFragment();
 
-/* Забираем данные из шаблона */
-var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+  /* С помощью цикла пробегаемся на каждом элементе и вставляем данные из нашей функции */
+  for (var i = 0; i < arr.length; i++) {
 
-/* Создали фрагмент для добавление наших домов */
-var fragment = document.createDocumentFragment();
+    /* Клонируем данные из шаблона */
+    var houseElements = visibleHouseMap.cloneNode(true);
+
+    /* Меняем изображения и alt на каждом элементе */
+    var imageItem = houseElements.querySelector('img');
+    imageItem.src = items[i]['author']['avatar'];
+    imageItem.alt = 'Заголовок будущего объявления';
+
+    /* Меняем координаты */
+    houseElements.style.left = items[i]['location']['x'] + 'px';
+    houseElements.style.top = items[i]['location']['y'] + 'px';
+
+    houseElements.classList.add('map__tick');
 
 
-/* С помощью цикла пробегаемся на каждом элементе и вставляем данные из нашей функции */
-for (var i = 1; i < COUNTHOUSE; i++) {
+    /* Вставляем объекты в фрагмент */
+    fragment.appendChild(houseElements);
 
-  /* Клонируем данные из шаблона */
-  var houseElements = visibleHouseMap.cloneNode(true);
+  }
 
-  /* Вставляем объекты в фрагмент */
-  fragment.appendChild(houseElements);
+  return fragment;
+};
 
-  /* Меняем изображения на каждом элементе */
-  houseElements.querySelector('img[draggable="false"]').src = objectHouse[i]['author']['avatar'];
-
-  /* Меняем alt */
-  houseElements.querySelector('img[draggable="false"]').alt = 'Заголовок будущего объявления';
-
-  /* Меняем координаты */
-  houseElements.style.left = objectHouse[i]['location']['x'];
-  houseElements.style.top = objectHouse[i]['location']['y'];
-
-}
+/* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
+var items = createHouse(COUNT_AD);
 
 /* В div вставляем наши сгенерированные DOM элементы */
-MAP_SURF.appendChild(fragment);
+var fragment = createFragment(items);
+mapSurf.appendChild(fragment);
+
+var createPoint = function (count) {
+
+  var mapPoints = document.querySelectorAll('.map__tick');
+  var mapWidth = mapPoints.clientWidth;
+  var mapTop = mapPoints.clientTop;
+
+  for (var i = 0; i < count; i++) {
+
+    mapPoints[i].style.left =+ '25px';
+    mapPoints[i].style.top - '70px';
+
+  }
+
+};
+createPoint(COUNT_AD);
