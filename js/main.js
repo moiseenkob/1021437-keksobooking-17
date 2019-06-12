@@ -5,6 +5,8 @@ var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
 var Y_MAP_MIN = 130;
 var Y_MAP_MAX = 630;
 var MIN_VALUE = 1;
+var MAP_LEFT = 25;
+var MAP_TOP = 70;
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -62,11 +64,8 @@ var createFragment = function (arr) {
     imageItem.alt = 'Заголовок будущего объявления';
 
     /* Меняем координаты */
-    houseElements.style.left = items[i]['location']['x'] + 'px';
-    houseElements.style.top = items[i]['location']['y'] + 'px';
-
-    houseElements.classList.add('map__tick');
-
+    houseElements.style.left = items[i]['location']['x'] + MAP_LEFT + 'px';
+    houseElements.style.top = items[i]['location']['y'] - MAP_TOP + 'px';
 
     /* Вставляем объекты в фрагмент */
     fragment.appendChild(houseElements);
@@ -81,20 +80,6 @@ var items = createHouse(COUNT_AD);
 
 /* В div вставляем наши сгенерированные DOM элементы */
 var fragment = createFragment(items);
+
 mapSurf.appendChild(fragment);
 
-var createPoint = function (count) {
-
-  var mapPoints = document.querySelectorAll('.map__tick');
-  var mapWidth = mapPoints.clientWidth;
-  var mapTop = mapPoints.clientTop;
-
-  for (var i = 0; i < count; i++) {
-
-    mapPoints[i].style.left =+ '25px';
-    mapPoints[i].style.top - '70px';
-
-  }
-
-};
-createPoint(COUNT_AD);
