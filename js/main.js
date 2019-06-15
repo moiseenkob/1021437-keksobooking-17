@@ -7,19 +7,17 @@ var Y_MAP_MAX = 630;
 var MIN_VALUE = 1;
 var MAP_LEFT = 25;
 var MAP_TOP = 70;
+var MAP_MAIN_LEFT = 570;
+var MAP_MAIN_TOP = 375;
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapSurf = document.querySelector('.map__pins');
 
-/* Удаляем лишний класс, для удобной работы (ВРЕМЕННО) */
-document.querySelector('.map').classList.remove('map--faded');
-
 /* Функция рандомного числа */
 var randomCount = function (min, max) {
   return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
 };
-
 
 /* Создал функцию с объявлениями 8 объектов */
 var createHouse = function (val) {
@@ -78,8 +76,43 @@ var createFragment = function (arr) {
 /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
 var items = createHouse(COUNT_AD);
 
-/* В div вставляем наши сгенерированные DOM элементы */
-var fragment = createFragment(items);
+/* Module 4 */
 
-mapSurf.appendChild(fragment);
+/* Блокируем элементы управления формы */
+var fildDisabled = document.querySelectorAll('fieldset');
+var createBlockFieldsForm = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].setAttribute('disabled', '');
+  }
+};
+/* Вызов функции для прохода по массиву и блокировки */
+createBlockFieldsForm(fildDisabled);
 
+/* Функция для активации элементов формы */
+var onMapMainClick = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].removeAttribute('disabled');
+  }
+};
+
+var mainMap = document.querySelector('.map__pin--main');
+/* Изначальная вставка координат main PIN */
+var inputAddress = document.querySelector('input[name="address"]');
+inputAddress.value = MAP_MAIN_LEFT + ', ' + MAP_MAIN_TOP;
+
+/* Функция для вставления координат в адрес */
+mainMap.addEventListener('mouseup', function () {
+
+});
+
+/* Фунция которая, отключает классы блокировки */
+mainMap.addEventListener('click', function () {
+  document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+  document.querySelector('.map').classList.remove('map--faded');
+  onMapMainClick(fildDisabled);
+
+  /* В div вставляем наши сгенерированные DOM элементы */
+  var fragment = createFragment(items);
+  mapSurf.appendChild(fragment);
+});
