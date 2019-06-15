@@ -7,8 +7,6 @@ var Y_MAP_MAX = 630;
 var MIN_VALUE = 1;
 var MAP_LEFT = 25;
 var MAP_TOP = 70;
-var MAP_MAIN_LEFT = 570;
-var MAP_MAIN_TOP = 375;
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -79,12 +77,25 @@ var items = createHouse(COUNT_AD);
 /* Module 4 */
 
 /* Блокируем элементы управления формы */
+/* Блокировка инпутов */
 var fildDisabled = document.querySelectorAll('fieldset');
 var createBlockFieldsForm = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].setAttribute('disabled', '');
   }
 };
+/* Блокировка select */
+var selectDisabled = document.querySelector('.map__filters');
+var formSelectDisabled = selectDisabled.querySelectorAll('select');
+var createBlockSelectForm = function (arr) {
+
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].setAttribute('disabled', '');
+  }
+};
+
+createBlockSelectForm(formSelectDisabled);
+
 /* Вызов функции для прохода по массиву и блокировки */
 createBlockFieldsForm(fildDisabled);
 
@@ -97,16 +108,14 @@ var onMapMainClick = function (arr) {
 
 var mainMap = document.querySelector('.map__pin--main');
 /* Изначальная вставка координат main PIN */
+var mapMainStartPosition = document.querySelector('.map__pin--main');
+
+
 var inputAddress = document.querySelector('input[name="address"]');
-inputAddress.value = MAP_MAIN_LEFT + ', ' + MAP_MAIN_TOP;
+inputAddress.value = (mapMainStartPosition.getBoundingClientRect().left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainStartPosition.getBoundingClientRect().top + (mapMainStartPosition.clientHeight / 2));
 
 /* Функция для вставления координат в адрес */
 mainMap.addEventListener('mouseup', function () {
-
-});
-
-/* Фунция которая, отключает классы блокировки */
-mainMap.addEventListener('click', function () {
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map').classList.remove('map--faded');
@@ -115,4 +124,11 @@ mainMap.addEventListener('click', function () {
   /* В div вставляем наши сгенерированные DOM элементы */
   var fragment = createFragment(items);
   mapSurf.appendChild(fragment);
+  /* Вставляем наши свежие данные */
+  inputAddress.value = (mapMainStartPosition.getBoundingClientRect().left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainStartPosition.getBoundingClientRect().top + (mapMainStartPosition.clientHeight));
+});
+
+/* Фунция которая, отключает классы блокировки */
+mainMap.addEventListener('click', function () {
+
 });
