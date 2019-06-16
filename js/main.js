@@ -5,10 +5,10 @@ var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
 var Y_MAP_MIN = 130;
 var Y_MAP_MAX = 630;
 var MIN_VALUE = 1;
-var MAP_WIDTH = 50;
-var MAP_HEIGHT = 70;
-var MAP_MAIN_WIDTH = 65;
-var MAP_MAIN_HEIGTH = 65;
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+var MAP_PIN_MAIN_WIDTH = 65;
+var MAP_PIN_MAIN_HEIGTH = 65;
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -16,18 +16,15 @@ var mapSurf = document.querySelector('.map__pins');
 /* Переменная элементов формы */
 var adFormField = document.querySelectorAll('.ad-form fieldset');
 /* Переменная Блокировка select */
-var adFormSelect = document.querySelector('.map__filters');
-var adFormFieldSelect = adFormSelect.querySelectorAll('select');
+var adFormFilters = document.querySelector('.map__filters');
+var adFormFieldFilters = adFormFilters.querySelectorAll('select');
 
 /* Изначальная вставка координат main PIN */
-var mapMainStartPosition = document.querySelector('.map__pin--main');
+var mapPinMain = document.querySelector('.map__pin--main');
 var inputAddress = document.querySelector('input[name="address"]');
-/* var selectDateTimeIn = document.querySelector('#timein');
-var selectDateTimeOut = document.querySelector('#timeout'); */
-
 
 /* Функция рандомного числа */
-var randomCount = function (min, max) {
+var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
 };
 
@@ -42,11 +39,11 @@ var createHouse = function (val) {
         'avatar': 'img/avatars/user0' + i + '.png'
       },
       'offer': {
-        'type': TYPE_HOUSE[randomCount(0, TYPE_HOUSE.length - MIN_VALUE)]
+        'type': TYPE_HOUSE[getRandomNumber(0, TYPE_HOUSE.length - MIN_VALUE)]
       },
       'location': {
-        'x': randomCount(MIN_VALUE, mapSurf.clientWidth),
-        'y': randomCount(Y_MAP_MIN, Y_MAP_MAX)
+        'x': getRandomNumber(MIN_VALUE, mapSurf.clientWidth),
+        'y': getRandomNumber(Y_MAP_MIN, Y_MAP_MAX)
       }
     };
 
@@ -74,8 +71,8 @@ var createFragment = function (arr) {
     imageItem.alt = 'Заголовок будущего объявления';
 
     /* Меняем координаты */
-    houseElements.style.left = items[i]['location']['x'] + (MAP_WIDTH / 2) + 'px';
-    houseElements.style.top = items[i]['location']['y'] - MAP_HEIGHT + 'px';
+    houseElements.style.left = items[i]['location']['x'] + (PIN_WIDTH / 2) + 'px';
+    houseElements.style.top = items[i]['location']['y'] - PIN_HEIGHT + 'px';
 
     /* Вставляем объекты в фрагмент */
     fragment.appendChild(houseElements);
@@ -90,43 +87,35 @@ var items = createHouse(COUNT_AD);
 
 /* Module 4 */
 
-/* Блокировка инпутов */
-
+/* Функция добавление атрибута Disabled */
 var addAttributeFieldsDisabled = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].setAttribute('disabled', '');
   }
 };
 
-var removeAttributeFormSelect = function (arr) {
+/* Функция удаления атрибута Disabled */
+var removeAttributeFieldsDisabled = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].removeAttribute('disabled');
   }
 };
 
-var addAttributeFields = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    arr[i].setAttribute('disabled', '');
-  }
-};
-
-addAttributeFields(adFormFieldSelect);
-
-/* Вызов функции для прохода по массиву и блокировки */
+/* Вызов функций для добавления атрибутов Disabled*/
+addAttributeFieldsDisabled(adFormFieldFilters);
 addAttributeFieldsDisabled(adFormField);
 
-/* Функция удаления лишних классов */
-var activeWindow = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    arr[i].removeAttribute('disabled');
-  }
+/* Функция удаления лишних классов и атрибутов*/
+var activeWindow = function () {
+  removeAttributeFieldsDisabled(adFormField);
+  removeAttributeFieldsDisabled(adFormFilters);
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map').classList.remove('map--faded');
 };
 
-/* Функция которая возращает координат */
-var viewCoordinatesMap = function (map) {
+/* Функция которая возращает координаты */
+var getMainPinCoordinates = function (map) {
   var coordinatesMap = {
     left: map.offsetLeft,
     top: map.offsetTop
@@ -135,18 +124,18 @@ var viewCoordinatesMap = function (map) {
 };
 
 /* Вызов функции */
-var mapMainCoordinates = viewCoordinatesMap(mapMainStartPosition);
+var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
 /* Запись данных в input */
-inputAddress.value = (mapMainCoordinates.left + (MAP_MAIN_WIDTH / 2)) + ', ' + (mapMainCoordinates.top + (MAP_MAIN_HEIGTH / 2));
+inputAddress.value = (mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + (mapMainCoordinates.top + (MAP_PIN_MAIN_HEIGTH / 2));
 
 /* Функция для вставления координат в адрес */
-mapMainStartPosition.addEventListener('mouseup', function () {
+mapPinMain.addEventListener('mouseup', function () {
   /* Удаляем лишние классы и аттрибуты */
   activeWindow(adFormField);
-  removeAttributeFormSelect(adFormSelect);
   /* В div вставляем наши сгенерированные DOM элементы */
   var fragment = createFragment(items);
   mapSurf.appendChild(fragment);
   /* Вставляем наши свежие данные */
-  inputAddress.value = (mapMainCoordinates.left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainCoordinates.top + MAP_MAIN_HEIGTH);
+  var getMainPin = getMainPinCoordinates(mapPinMain);
+  inputAddress.value = (getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + (getMainPin.top + MAP_PIN_MAIN_HEIGTH);
 });
