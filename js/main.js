@@ -9,6 +9,7 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var MAP_PIN_MAIN_WIDTH = 65;
 var MAP_PIN_MAIN_HEIGTH = 65;
+var PRICE_ONE_NIGHT = [0, 1000, 5000, 10000];
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -23,6 +24,14 @@ var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
 /* Изначальная вставка координат main PIN */
 var mapPinMain = document.querySelector('.map__pin--main');
 var inputAddress = document.querySelector('input[name="address"]');
+
+/* Переменные для вставления данных */
+var selectTypeHouse = document.querySelector('#type');
+var setMinPriceField = document.querySelector('#price');
+
+/* Переменные для синхронизации */
+var selectDateTimeIn = document.querySelector('#timein');
+var selectDateTimeOut = document.querySelector('#timeout');
 
 /* Функция рандомного числа */
 var getRandomNumber = function (min, max) {
@@ -141,4 +150,29 @@ mapPinMain.addEventListener('mouseup', function () {
   /* Вставляем наши свежие данные */
   var getMainPin = getMainPinCoordinates(mapPinMain);
   inputAddress.value = (getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + (getMainPin.top + MAP_PIN_MAIN_HEIGTH);
+});
+
+/* Модуль два */
+
+/* Установка данных при загрузке страницы */
+var setPriceField = function () {
+  var activeSelectedTypeHouse = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
+  for (var i = 0; i < selectTypeHouse.length; i++) {
+    if (activeSelectedTypeHouse === selectTypeHouse[i].value) {
+      setMinPriceField.min = PRICE_ONE_NIGHT[i];
+      setMinPriceField.placeholder = PRICE_ONE_NIGHT[i];
+    }
+  }
+};
+setPriceField();
+
+selectTypeHouse.addEventListener('change', setPriceField);
+
+/* Время заезда */
+selectDateTimeIn.addEventListener('change', function () {
+  selectDateTimeOut.options.selectedIndex = selectDateTimeIn.options.selectedIndex;
+});
+/* Время выезда */
+selectDateTimeOut.addEventListener('change', function () {
+  selectDateTimeIn.options.selectedIndex = selectDateTimeOut.options.selectedIndex;
 });
