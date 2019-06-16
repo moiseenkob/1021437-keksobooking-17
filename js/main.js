@@ -16,8 +16,9 @@ var mapSurf = document.querySelector('.map__pins');
 /* Переменная элементов формы */
 var adFormField = document.querySelectorAll('.ad-form fieldset');
 /* Переменная Блокировка select */
-var adFormFilters = document.querySelector('.map__filters');
-var adFormFieldFilters = adFormFilters.querySelectorAll('select');
+var adMapFilters = document.querySelector('.map__filters');
+var adMapFieldFilters = adMapFilters.querySelectorAll('select');
+var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
 
 /* Изначальная вставка координат main PIN */
 var mapPinMain = document.querySelector('.map__pin--main');
@@ -102,13 +103,15 @@ var removeAttributeFieldsDisabled = function (arr) {
 };
 
 /* Вызов функций для добавления атрибутов Disabled*/
-addAttributeFieldsDisabled(adFormFieldFilters);
+addAttributeFieldsDisabled(adMapFieldFilters);
 addAttributeFieldsDisabled(adFormField);
+addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
 
 /* Функция удаления лишних классов и атрибутов*/
 var activeWindow = function () {
   removeAttributeFieldsDisabled(adFormField);
-  removeAttributeFieldsDisabled(adFormFilters);
+  removeAttributeFieldsDisabled(adMapFieldFilters);
+  removeAttributeFieldsDisabled(adMapFieldFiltersFeatures);
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map').classList.remove('map--faded');
@@ -131,7 +134,7 @@ inputAddress.value = (mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', '
 /* Функция для вставления координат в адрес */
 mapPinMain.addEventListener('mouseup', function () {
   /* Удаляем лишние классы и аттрибуты */
-  activeWindow(adFormField);
+  activeWindow();
   /* В div вставляем наши сгенерированные DOM элементы */
   var fragment = createFragment(items);
   mapSurf.appendChild(fragment);
