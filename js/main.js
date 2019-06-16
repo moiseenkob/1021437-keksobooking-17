@@ -5,12 +5,26 @@ var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
 var Y_MAP_MIN = 130;
 var Y_MAP_MAX = 630;
 var MIN_VALUE = 1;
-var MAP_LEFT = 25;
-var MAP_TOP = 70;
+var MAP_WIDTH = 50;
+var MAP_HEIGHT = 70;
+var MAP_MAIN_WIDTH = 65;
+var MAP_MAIN_HEIGTH = 65;
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapSurf = document.querySelector('.map__pins');
+/* Переменная элементов формы */
+var adFormField = document.querySelectorAll('.ad-form fieldset');
+/* Переменная Блокировка select */
+var adFormSelect = document.querySelector('.map__filters');
+var adFormFieldSelect = adFormSelect.querySelectorAll('select');
+
+/* Изначальная вставка координат main PIN */
+var mapMainStartPosition = document.querySelector('.map__pin--main');
+var inputAddress = document.querySelector('input[name="address"]');
+/* var selectDateTimeIn = document.querySelector('#timein');
+var selectDateTimeOut = document.querySelector('#timeout'); */
+
 
 /* Функция рандомного числа */
 var randomCount = function (min, max) {
@@ -60,8 +74,8 @@ var createFragment = function (arr) {
     imageItem.alt = 'Заголовок будущего объявления';
 
     /* Меняем координаты */
-    houseElements.style.left = items[i]['location']['x'] + MAP_LEFT + 'px';
-    houseElements.style.top = items[i]['location']['y'] - MAP_TOP + 'px';
+    houseElements.style.left = items[i]['location']['x'] + (MAP_WIDTH / 2) + 'px';
+    houseElements.style.top = items[i]['location']['y'] - MAP_HEIGHT + 'px';
 
     /* Вставляем объекты в фрагмент */
     fragment.appendChild(houseElements);
@@ -76,59 +90,63 @@ var items = createHouse(COUNT_AD);
 
 /* Module 4 */
 
-/* Блокируем элементы управления формы */
 /* Блокировка инпутов */
-var fildDisabled = document.querySelectorAll('fieldset');
-var createBlockFieldsForm = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    arr[i].setAttribute('disabled', '');
-  }
-};
-/* Блокировка select */
-var selectDisabled = document.querySelector('.map__filters');
-var formSelectDisabled = selectDisabled.querySelectorAll('select');
-var createBlockSelectForm = function (arr) {
 
+var addAttributeFieldsDisabled = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].setAttribute('disabled', '');
   }
 };
 
-createBlockSelectForm(formSelectDisabled);
-
-/* Вызов функции для прохода по массиву и блокировки */
-createBlockFieldsForm(fildDisabled);
-
-/* Функция для активации элементов формы */
-var onMapMainClick = function (arr) {
+var removeAttributeFormSelect = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     arr[i].removeAttribute('disabled');
   }
 };
 
-var mainMap = document.querySelector('.map__pin--main');
-/* Изначальная вставка координат main PIN */
-var mapMainStartPosition = document.querySelector('.map__pin--main');
+var addAttributeFields = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].setAttribute('disabled', '');
+  }
+};
 
+addAttributeFields(adFormFieldSelect);
 
-var inputAddress = document.querySelector('input[name="address"]');
-inputAddress.value = (mapMainStartPosition.getBoundingClientRect().left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainStartPosition.getBoundingClientRect().top + (mapMainStartPosition.clientHeight / 2));
+/* Вызов функции для прохода по массиву и блокировки */
+addAttributeFieldsDisabled(adFormField);
 
-/* Функция для вставления координат в адрес */
-mainMap.addEventListener('mouseup', function () {
+/* Функция удаления лишних классов */
+var activeWindow = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i].removeAttribute('disabled');
+  }
   document.querySelector('.map').classList.remove('map--faded');
   document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   document.querySelector('.map').classList.remove('map--faded');
-  onMapMainClick(fildDisabled);
+};
 
+/* Функция которая возращает координат */
+var viewCoordinatesMap = function (map) {
+  var coordinatesMap = {
+    left: map.offsetLeft,
+    top: map.offsetTop
+  };
+  return coordinatesMap;
+};
+
+/* Вызов функции */
+var mapMainCoordinates = viewCoordinatesMap(mapMainStartPosition);
+/* Запись данных в input */
+inputAddress.value = (mapMainCoordinates.left + (MAP_MAIN_WIDTH / 2)) + ', ' + (mapMainCoordinates.top + (MAP_MAIN_HEIGTH / 2));
+
+/* Функция для вставления координат в адрес */
+mapMainStartPosition.addEventListener('mouseup', function () {
+  /* Удаляем лишние классы и аттрибуты */
+  activeWindow(adFormField);
+  removeAttributeFormSelect(adFormSelect);
   /* В div вставляем наши сгенерированные DOM элементы */
   var fragment = createFragment(items);
   mapSurf.appendChild(fragment);
   /* Вставляем наши свежие данные */
-  inputAddress.value = (mapMainStartPosition.getBoundingClientRect().left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainStartPosition.getBoundingClientRect().top + (mapMainStartPosition.clientHeight));
-});
-
-/* Фунция которая, отключает классы блокировки */
-mainMap.addEventListener('click', function () {
-
+  inputAddress.value = (mapMainCoordinates.left + (mapMainStartPosition.clientWidth / 2)) + ', ' + (mapMainCoordinates.top + MAP_MAIN_HEIGTH);
 });
