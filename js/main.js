@@ -9,7 +9,12 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var MAP_PIN_MAIN_WIDTH = 65;
 var MAP_PIN_MAIN_HEIGTH = 65;
-var PRICE_ONE_NIGHT = [0, 1000, 5000, 10000];
+var PRICE_ONE_NIGHT = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -32,6 +37,7 @@ var setMinPriceField = document.querySelector('#price');
 /* Переменные для синхронизации */
 var selectDateTimeIn = document.querySelector('#timein');
 var selectDateTimeOut = document.querySelector('#timeout');
+var setTimeForm = document.querySelector('.ad-form__element--time');
 
 /* Функция рандомного числа */
 var getRandomNumber = function (min, max) {
@@ -138,7 +144,7 @@ var getMainPinCoordinates = function (map) {
 /* Вызов функции */
 var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
 /* Запись данных в input */
-inputAddress.value = (mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + (mapMainCoordinates.top + (MAP_PIN_MAIN_HEIGTH / 2));
+inputAddress.value = Math.round(mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(mapMainCoordinates.top + (MAP_PIN_MAIN_HEIGTH / 2));
 
 /* Функция для вставления координат в адрес */
 mapPinMain.addEventListener('mouseup', function () {
@@ -149,30 +155,25 @@ mapPinMain.addEventListener('mouseup', function () {
   mapSurf.appendChild(fragment);
   /* Вставляем наши свежие данные */
   var getMainPin = getMainPinCoordinates(mapPinMain);
-  inputAddress.value = (getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + (getMainPin.top + MAP_PIN_MAIN_HEIGTH);
+  inputAddress.value = Math.round(getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
 });
 
 /* Модуль два */
-
-/* Установка данных при загрузке страницы */
-var setPriceField = function () {
-  var activeSelectedTypeHouse = selectTypeHouse.options[selectTypeHouse.selectedIndex].value;
-  for (var i = 0; i < selectTypeHouse.length; i++) {
-    if (activeSelectedTypeHouse === selectTypeHouse[i].value) {
-      setMinPriceField.min = PRICE_ONE_NIGHT[i];
-      setMinPriceField.placeholder = PRICE_ONE_NIGHT[i];
-    }
-  }
+var onSelectSetMinPrice = function (evt) {
+  var target = evt.target;
+  setMinPriceField.placeholder = PRICE_ONE_NIGHT[target.value];
+  setMinPriceField.min = PRICE_ONE_NIGHT[target.value];
 };
-setPriceField();
 
-selectTypeHouse.addEventListener('change', setPriceField);
+selectTypeHouse.addEventListener('change', onSelectSetMinPrice);
 
-/* Время заезда */
-selectDateTimeIn.addEventListener('change', function () {
-  selectDateTimeOut.options.selectedIndex = selectDateTimeIn.options.selectedIndex;
-});
-/* Время выезда */
-selectDateTimeOut.addEventListener('change', function () {
-  selectDateTimeIn.options.selectedIndex = selectDateTimeOut.options.selectedIndex;
+/* Прослушиваем событие для указания время заселения и выезда */
+setTimeForm.addEventListener('change', function (evt) {
+  var target = evt.target;
+
+  if (target.id === selectDateTimeIn.id) {
+    selectDateTimeOut.options.selectedIndex = target.options.selectedIndex;
+  }
+  selectDateTimeIn.options.selectedIndex = target.options.selectedIndex;
+
 });
