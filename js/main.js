@@ -159,21 +159,22 @@ mapPinMain.addEventListener('mouseup', function () {
 });
 
 /* Модуль два */
-var onSelectSetMinPrice = function (evt) {
+var onSelectTypeHouse = function (evt) {
   var target = evt.target;
   setMinPriceField.placeholder = PRICE_ONE_NIGHT[target.value];
   setMinPriceField.min = PRICE_ONE_NIGHT[target.value];
 };
+/* Прослушиваем событие для указания цены при выборе типа жилья */
+selectTypeHouse.addEventListener('change', onSelectTypeHouse);
 
-selectTypeHouse.addEventListener('change', onSelectSetMinPrice);
-
-/* Прослушиваем событие для указания время заселения и выезда */
-setTimeForm.addEventListener('change', function (evt) {
+var onSetTimeFormChange = function (evt) {
   var target = evt.target;
-
   if (target.id === selectDateTimeIn.id) {
     selectDateTimeOut.options.selectedIndex = target.options.selectedIndex;
+  } else {
+    selectDateTimeIn.options.selectedIndex = target.options.selectedIndex;
   }
-  selectDateTimeIn.options.selectedIndex = target.options.selectedIndex;
+};
 
-});
+/* Прослушиваем событие для указания время заселения и выезда */
+setTimeForm.addEventListener('change', onSetTimeFormChange);
