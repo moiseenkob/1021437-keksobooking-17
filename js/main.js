@@ -39,6 +39,8 @@ var selectDateTimeIn = document.querySelector('#timein');
 var selectDateTimeOut = document.querySelector('#timeout');
 var setTimeForm = document.querySelector('.ad-form__element--time');
 
+var fieldMap = document.querySelector('.map');
+
 /* Функция рандомного числа */
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
@@ -146,17 +148,6 @@ var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
 /* Запись данных в input */
 inputAddress.value = Math.round(mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(mapMainCoordinates.top + (MAP_PIN_MAIN_HEIGTH / 2));
 
-/* Функция для вставления координат в адрес */
-mapPinMain.addEventListener('mouseup', function () {
-  /* Удаляем лишние классы и аттрибуты */
-  activeWindow();
-  /* В div вставляем наши сгенерированные DOM элементы */
-  var fragment = createFragment(items);
-  mapSurf.appendChild(fragment);
-  /* Вставляем наши свежие данные */
-  var getMainPin = getMainPinCoordinates(mapPinMain);
-  inputAddress.value = Math.round(getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
-});
 
 /* Модуль два */
 var onSelectTypeHouse = function (evt) {
@@ -178,3 +169,65 @@ var onSetTimeFormChange = function (evt) {
 
 /* Прослушиваем событие для указания время заселения и выезда */
 setTimeForm.addEventListener('change', onSetTimeFormChange);
+
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+    /* Удаляем лишние классы и аттрибуты */
+    activeWindow();
+
+    /* Ограничение движения */
+
+    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
+    if (mapPinMain.style.top >= (Y_MAP_MAX + 'px')) {
+      mapPinMain.style.top = Y_MAP_MAX + 'px';
+    }
+    if (mapPinMain.style.top <= (Y_MAP_MIN + 'px')) {
+      mapPinMain.style.top = Y_MAP_MIN + 'px';
+    }
+    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    if (mapPinMain.style.left <= (0 + 'px')) {
+      mapPinMain.style.left = 0 + 'px';
+    }
+    if (mapPinMain.style.left >= 1135 + 'px') {
+      mapPinMain.style.left = 1135 + 'px';
+    }
+
+    /* Вставляем наши свежие данные */
+    var fragment = createFragment(items);
+    mapSurf.appendChild(fragment);
+
+
+    var getMainPin = getMainPinCoordinates(mapPinMain);
+    inputAddress.value = Math.round(getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+});
