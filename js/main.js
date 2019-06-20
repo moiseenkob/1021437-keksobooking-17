@@ -39,8 +39,6 @@ var selectDateTimeIn = document.querySelector('#timein');
 var selectDateTimeOut = document.querySelector('#timeout');
 var setTimeForm = document.querySelector('.ad-form__element--time');
 
-var fieldMap = document.querySelector('.map');
-
 /* Функция рандомного числа */
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
@@ -102,7 +100,6 @@ var createFragment = function (arr) {
 
 /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
 var items = createHouse(COUNT_AD);
-
 /* Module 4 */
 
 /* Функция добавление атрибута Disabled */
@@ -143,10 +140,19 @@ var getMainPinCoordinates = function (map) {
   return coordinatesMap;
 };
 
+/* Функция удаления элементов */
+var removeItems = function (elements) {
+  if (elements.length > 0) {
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].remove();
+    }
+  }
+};
+
 /* Вызов функции */
 var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
 /* Запись данных в input */
-inputAddress.value = Math.round(mapMainCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(mapMainCoordinates.top + (MAP_PIN_MAIN_HEIGTH / 2));
+inputAddress.value = Math.round(mapMainCoordinates.left) + ', ' + Math.round(mapMainCoordinates.top);
 
 
 /* Модуль два */
@@ -178,6 +184,7 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     y: evt.clientY
   };
 
+
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
@@ -190,41 +197,45 @@ mapPinMain.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX,
       y: moveEvt.clientY
     };
-    /* Удаляем лишние классы и аттрибуты */
-    activeWindow();
 
-    /* Ограничение движения */
+    /* Высота */
 
-    mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-    if (mapPinMain.style.top >= (Y_MAP_MAX + 'px')) {
+    var mapItemTop = (mapPinMain.offsetTop - shift.y) + 'px';
+    if (mapItemTop >= (Y_MAP_MAX + 'px')) {
       mapPinMain.style.top = Y_MAP_MAX + 'px';
-    }
-    if (mapPinMain.style.top <= (Y_MAP_MIN + 'px')) {
+    } else if (mapItemTop <= (Y_MAP_MIN + 'px')) {
       mapPinMain.style.top = Y_MAP_MIN + 'px';
+    } else {
+      mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
     }
-    mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-    if (mapPinMain.style.left <= (0 + 'px')) {
+
+    var mapItemLeft = (mapPinMain.offsetLeft - shift.x) + 'px';
+    if (mapItemLeft >= (1135 + 'px')) {
+      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+    } else if (mapItemLeft <= (0 + 'px')) {
       mapPinMain.style.left = 0 + 'px';
+    } else {
+      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
     }
-    if (mapPinMain.style.left >= 1135 + 'px') {
-      mapPinMain.style.left = 1135 + 'px';
-    }
-
-    /* Вставляем наши свежие данные */
-    var fragment = createFragment(items);
-    mapSurf.appendChild(fragment);
-
 
     var getMainPin = getMainPinCoordinates(mapPinMain);
-    inputAddress.value = Math.round(getMainPin.left + (mapPinMain.clientWidth / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
+    inputAddress.value = Math.round(getMainPin.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
+
+    /* Переменная для удаления данных */
+    var elementsMap = document.querySelectorAll('button[type="button"]');
+    removeItems(elementsMap);
 
   };
-
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+
+    activeWindow();
+    var fragment = createFragment(items);
+    mapSurf.appendChild(fragment);
+
   };
 
   document.addEventListener('mousemove', onMouseMove);
