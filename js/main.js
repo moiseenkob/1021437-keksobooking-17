@@ -18,7 +18,7 @@ var PRICE_ONE_NIGHT = {
 
 /* Забираем данные из шаблона */
 var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
-var mapSurf = document.querySelector('.map__pins');
+var globalMap = document.querySelector('.map__pins');
 /* Переменная элементов формы */
 var adFormField = document.querySelectorAll('.ad-form fieldset');
 /* Переменная Блокировка select */
@@ -58,7 +58,7 @@ var createHouse = function (val) {
         'type': TYPE_HOUSE[getRandomNumber(0, TYPE_HOUSE.length - MIN_VALUE)]
       },
       'location': {
-        'x': getRandomNumber(MIN_VALUE, mapSurf.clientWidth),
+        'x': getRandomNumber(MIN_VALUE, globalMap.clientWidth),
         'y': getRandomNumber(Y_MAP_MIN, Y_MAP_MAX)
       }
     };
@@ -66,7 +66,6 @@ var createHouse = function (val) {
     /* Добаввляем наши объекты в массив */
     objectHouse.push(item);
   }
-
   return objectHouse;
 };
 
@@ -149,6 +148,25 @@ var removeItems = function (elements) {
   }
 };
 
+
+var getMoveCoordinates = function (y, x) {
+  if (y > Y_MAP_MAX) {
+    mapPinMain.style.top = Y_MAP_MAX + 'px';
+  } else if (y > Y_MAP_MIN <= 0) {
+    mapPinMain.style.top = Y_MAP_MIN + 'px';
+  } else {
+    mapPinMain.style.top = y + 'px';
+  }
+
+  if (x >= 1135) {
+    mapPinMain.style.left = 1135 + 'px';
+  } else if (x <= 0) {
+    mapPinMain.style.left = 0 + 'px';
+  } else {
+    mapPinMain.style.left = x + 'px';
+  }
+};
+
 /* Вызов функции */
 var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
 /* Запись данных в input */
@@ -176,7 +194,6 @@ var onSetTimeFormChange = function (evt) {
 /* Прослушиваем событие для указания время заселения и выезда */
 setTimeForm.addEventListener('change', onSetTimeFormChange);
 
-
 mapPinMain.addEventListener('mousedown', function (evt) {
 
   var startCoords = {
@@ -199,31 +216,18 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     };
 
     /* Высота */
+    var coordinateYPoint = parseInt(mapPinMain.offsetTop - shift.y, 10);
+    var coordinateXPoint = parseInt(mapPinMain.offsetLeft - shift.x, 10);
 
-    var mapItemTop = (mapPinMain.offsetTop - shift.y) + 'px';
-    if (mapItemTop >= (Y_MAP_MAX + 'px')) {
-      mapPinMain.style.top = Y_MAP_MAX + 'px';
-    } else if (mapItemTop <= (Y_MAP_MIN + 'px')) {
-      mapPinMain.style.top = Y_MAP_MIN + 'px';
-    } else {
-      mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
-    }
+    /* Вызов функции по ограничению */
+    getMoveCoordinates(coordinateYPoint, coordinateXPoint);
 
-    var mapItemLeft = (mapPinMain.offsetLeft - shift.x) + 'px';
-    if (mapItemLeft >= (1135 + 'px')) {
-      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-    } else if (mapItemLeft <= (0 + 'px')) {
-      mapPinMain.style.left = 0 + 'px';
-    } else {
-      mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
-    }
+    var mainPinsCoordinates = getMainPinCoordinates(mapPinMain);
+    inputAddress.value = Math.round(mainPinsCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(mainPinsCoordinates.top + MAP_PIN_MAIN_HEIGTH);
 
-    var getMainPin = getMainPinCoordinates(mapPinMain);
-    inputAddress.value = Math.round(getMainPin.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(getMainPin.top + MAP_PIN_MAIN_HEIGTH);
-
-    /* Переменная для удаления данных */
-    var elementsMap = document.querySelectorAll('button[type="button"]');
-    removeItems(elementsMap);
+    /* Переменная для удаления данных с исключением основной метки */
+    var pinsMap = globalMap.querySelectorAll('.map__pin:not(.map__pin--main)');
+    removeItems(pinsMap);
 
   };
   var onMouseUp = function (upEvt) {
@@ -234,7 +238,7 @@ mapPinMain.addEventListener('mousedown', function (evt) {
 
     activeWindow();
     var fragment = createFragment(items);
-    mapSurf.appendChild(fragment);
+    globalMap.appendChild(fragment);
 
   };
 
