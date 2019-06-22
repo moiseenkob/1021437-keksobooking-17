@@ -9,6 +9,8 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var MAP_PIN_MAIN_WIDTH = 65;
 var MAP_PIN_MAIN_HEIGTH = 65;
+var MAP_MAX_WIDTH = 1135;
+var MAP_MIN_WIDTH = 0;
 var PRICE_ONE_NIGHT = {
   'bungalo': 0,
   'flat': 1000,
@@ -25,20 +27,16 @@ var adFormField = document.querySelectorAll('.ad-form fieldset');
 var adMapFilters = document.querySelector('.map__filters');
 var adMapFieldFilters = adMapFilters.querySelectorAll('select');
 var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
-
 /* Изначальная вставка координат main PIN */
 var mapPinMain = document.querySelector('.map__pin--main');
 var inputAddress = document.querySelector('input[name="address"]');
-
 /* Переменные для вставления данных */
 var selectTypeHouse = document.querySelector('#type');
 var setMinPriceField = document.querySelector('#price');
-
 /* Переменные для синхронизации */
 var selectDateTimeIn = document.querySelector('#timein');
 var selectDateTimeOut = document.querySelector('#timeout');
 var setTimeForm = document.querySelector('.ad-form__element--time');
-
 /* Функция рандомного числа */
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
@@ -48,8 +46,8 @@ var getRandomNumber = function (min, max) {
 var createHouse = function (val) {
   var objectHouse = [];
   for (var i = 1; i <= val; i++) {
-    /* Добавил рандом типа жилья */
 
+    /* Добавил рандом типа жилья */
     var item = {
       'author': {
         'avatar': 'img/avatars/user0' + i + '.png'
@@ -99,7 +97,6 @@ var createFragment = function (arr) {
 
 /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
 var items = createHouse(COUNT_AD);
-/* Module 4 */
 
 /* Функция добавление атрибута Disabled */
 var addAttributeFieldsDisabled = function (arr) {
@@ -130,15 +127,6 @@ var activeWindow = function () {
   document.querySelector('.map').classList.remove('map--faded');
 };
 
-/* Функция которая возращает координаты */
-var getMainPinCoordinates = function (map) {
-  var coordinatesMap = {
-    left: map.offsetLeft,
-    top: map.offsetTop
-  };
-  return coordinatesMap;
-};
-
 /* Функция удаления элементов */
 var removeItems = function (elements) {
   if (elements.length > 0) {
@@ -148,40 +136,38 @@ var removeItems = function (elements) {
   }
 };
 
+/* Функиця установки значения при активном действии и блокировке */
+var getMainPinCoordinates = function (state) {
+  var left = mapPinMain.offsetLeft;
+  var top = mapPinMain.offsetTop;
 
-var getMoveCoordinates = function (y, x) {
-  if (y > Y_MAP_MAX) {
-    mapPinMain.style.top = Y_MAP_MAX + 'px';
-  } else if (y > Y_MAP_MIN <= 0) {
-    mapPinMain.style.top = Y_MAP_MIN + 'px';
-  } else {
-    mapPinMain.style.top = y + 'px';
-  }
-
-  if (x >= 1135) {
-    mapPinMain.style.left = 1135 + 'px';
-  } else if (x <= 0) {
-    mapPinMain.style.left = 0 + 'px';
-  } else {
-    mapPinMain.style.left = x + 'px';
+  switch (state) {
+    case 'active':
+      return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH);
+    case 'disabled':
+      return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH / 2);
+    default:
+      return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH / 2);
   }
 };
 
-/* Вызов функции */
-var mapMainCoordinates = getMainPinCoordinates(mapPinMain);
-/* Запись данных в input */
-inputAddress.value = Math.round(mapMainCoordinates.left) + ', ' + Math.round(mapMainCoordinates.top);
+/* Функция сброса значений */
+var setDefaultValues = function () {
+  setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
+  inputAddress.value = getMainPinCoordinates('disabled');
+};
 
-
-/* Модуль два */
+/* Замена цены при смене типа жилья */
 var onSelectTypeHouse = function (evt) {
-  var target = evt.target;
-  setMinPriceField.placeholder = PRICE_ONE_NIGHT[target.value];
-  setMinPriceField.min = PRICE_ONE_NIGHT[target.value];
+  var value = evt.target.value;
+  setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
+  setMinPriceField.min = PRICE_ONE_NIGHT[value];
 };
+
 /* Прослушиваем событие для указания цены при выборе типа жилья */
 selectTypeHouse.addEventListener('change', onSelectTypeHouse);
 
+/* Установка времени при выборе въезда или выезда */
 var onSetTimeFormChange = function (evt) {
   var target = evt.target;
   if (target.id === selectDateTimeIn.id) {
@@ -201,7 +187,6 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     y: evt.clientY
   };
 
-
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
@@ -214,20 +199,19 @@ mapPinMain.addEventListener('mousedown', function (evt) {
       x: moveEvt.clientX,
       y: moveEvt.clientY
     };
+    activeWindow();
 
     /* Высота */
-    var coordinateYPoint = parseInt(mapPinMain.offsetTop - shift.y, 10);
-    var coordinateXPoint = parseInt(mapPinMain.offsetLeft - shift.x, 10);
+    var coordinateYPoint = mapPinMain.offsetTop - shift.y;
+    var coordinateXPoint = mapPinMain.offsetLeft - shift.x;
+    var isInvalideTop = coordinateYPoint > Y_MAP_MAX || coordinateYPoint < Y_MAP_MIN;
+    var isInvalideLeft = coordinateXPoint > MAP_MAX_WIDTH || coordinateXPoint <= MAP_MIN_WIDTH;
 
-    /* Вызов функции по ограничению */
-    getMoveCoordinates(coordinateYPoint, coordinateXPoint);
+    mapPinMain.style.top = isInvalideTop ? mapPinMain.style.top + 'px' : coordinateYPoint + 'px';
+    mapPinMain.style.left = isInvalideLeft ? mapPinMain.style.left + 'px' : coordinateXPoint + 'px';
 
-    var mainPinsCoordinates = getMainPinCoordinates(mapPinMain);
-    inputAddress.value = Math.round(mainPinsCoordinates.left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(mainPinsCoordinates.top + MAP_PIN_MAIN_HEIGTH);
-
-    /* Переменная для удаления данных с исключением основной метки */
-    var pinsMap = globalMap.querySelectorAll('.map__pin:not(.map__pin--main)');
-    removeItems(pinsMap);
+    /* Записываем данные в поле адрес, когда метка активна */
+    inputAddress.value = getMainPinCoordinates('active');
 
   };
   var onMouseUp = function (upEvt) {
@@ -237,6 +221,13 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mouseup', onMouseUp);
 
     activeWindow();
+    inputAddress.value = getMainPinCoordinates('active');
+
+    /* Переменная для удаления данных с исключением основной метки */
+    var pinsMap = globalMap.querySelectorAll('.map__pin:not(.map__pin--main)');
+    /* При отжатии кнопки удаляем элементы */
+    removeItems(pinsMap);
+    /* Добавляем новые элементы */
     var fragment = createFragment(items);
     globalMap.appendChild(fragment);
 
@@ -246,3 +237,5 @@ mapPinMain.addEventListener('mousedown', function (evt) {
   document.addEventListener('mouseup', onMouseUp);
 
 });
+
+setDefaultValues();
