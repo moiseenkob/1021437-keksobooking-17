@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+
+  var MAP_PIN_MAIN_WIDTH = 65;
+  var MAP_PIN_MAIN_HEIGTH = 65;
+  var PRICE_ONE_NIGHT = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
   /* Функция удаления элементов */
   var removeItems = function (elements) {
     if (elements.length > 0) {
@@ -26,7 +35,7 @@
 
   /* Функция сброса значений */
   var setDefaultValues = function () {
-    window.form.setMinPriceField.placeholder = window.const.PRICE_ONE_NIGHT['flat'];
+    window.form.setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
     window.form.inputAddress.value = getMainPinCoordinates('disabled');
   };
 
@@ -37,11 +46,11 @@
 
     switch (state) {
       case 'active':
-        return Math.round(left + (window.const.MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + window.const.MAP_PIN_MAIN_HEIGTH);
+        return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH);
       case 'disabled':
-        return Math.round(left + (window.const.MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + window.const.MAP_PIN_MAIN_HEIGTH / 2);
+        return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH / 2);
       default:
-        return Math.round(left + (window.const.MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + window.const.MAP_PIN_MAIN_HEIGTH / 2);
+        return Math.round(left + (MAP_PIN_MAIN_WIDTH / 2)) + ', ' + Math.round(top + MAP_PIN_MAIN_HEIGTH / 2);
     }
   };
 

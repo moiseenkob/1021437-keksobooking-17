@@ -12,6 +12,12 @@
   var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
   var adFormField = document.querySelectorAll('.ad-form fieldset');
   var inputAddress = document.querySelector('input[name="address"]');
+  var PRICE_ONE_NIGHT = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
 
   /* Вызов функций для добавления атрибутов Disabled*/
   window.utilis.addAttributeFieldsDisabled(adMapFieldFilters);
@@ -21,8 +27,8 @@
   /* Замена цены при смене типа жилья */
   var onSelectTypeHouse = function (evt) {
     var value = evt.target.value;
-    setMinPriceField.placeholder = window.const.PRICE_ONE_NIGHT[value];
-    setMinPriceField.min = window.const.PRICE_ONE_NIGHT[value];
+    setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
+    setMinPriceField.min = PRICE_ONE_NIGHT[value];
   };
 
   /* Прослушиваем событие для указания цены при выборе типа жилья */

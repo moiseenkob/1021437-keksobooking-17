@@ -2,7 +2,8 @@
 
 (function () {
 
-
+  var MAP_MIN_WIDTH = 0;
+  var MAP_MAX_WIDTH = 1135;
   window.createCards.mapPinMain.addEventListener('mousedown', function (evt) {
 
     var startCoords = {
@@ -28,7 +29,7 @@
       var coordinateYPoint = window.createCards.mapPinMain.offsetTop - shift.y;
       var coordinateXPoint = window.createCards.mapPinMain.offsetLeft - shift.x;
       var isInvalideTop = coordinateYPoint > window.const.Y_MAP_MAX || coordinateYPoint < window.const.Y_MAP_MIN;
-      var isInvalideLeft = coordinateXPoint > window.const.MAP_MAX_WIDTH || coordinateXPoint <= window.const.MAP_MIN_WIDTH;
+      var isInvalideLeft = coordinateXPoint > MAP_MAX_WIDTH || coordinateXPoint <= MAP_MIN_WIDTH;
 
       window.createCards.mapPinMain.style.top = isInvalideTop ? window.createCards.mapPinMain.style.top + 'px' : coordinateYPoint + 'px';
       window.createCards.mapPinMain.style.left = isInvalideLeft ? window.createCards.mapPinMain.style.left + 'px' : coordinateXPoint + 'px';

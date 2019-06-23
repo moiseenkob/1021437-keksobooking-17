@@ -1,13 +1,19 @@
 'use strict';
 
-var globalMap = document.querySelector('.map__pins');
 
 (function () {
+  var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
+  var globalMap = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
+  var COUNT_AD = 8;
+  var MIN_VALUE = 1;
+
   /* Функция рандомного числа */
   var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max + window.const.MIN_VALUE - min));
+    return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
   };
 
   /* Создал функцию с объявлениями 8 объектов */
@@ -21,10 +27,10 @@ var globalMap = document.querySelector('.map__pins');
           'avatar': 'img/avatars/user0' + i + '.png'
         },
         'offer': {
-          'type': window.const.TYPE_HOUSE[getRandomNumber(0, window.const.TYPE_HOUSE.length - window.const.MIN_VALUE)]
+          'type': TYPE_HOUSE[getRandomNumber(0, TYPE_HOUSE.length - MIN_VALUE)]
         },
         'location': {
-          'x': getRandomNumber(window.const.MIN_VALUE, globalMap.clientWidth),
+          'x': getRandomNumber(MIN_VALUE, globalMap.clientWidth),
           'y': getRandomNumber(window.const.Y_MAP_MIN, window.const.Y_MAP_MAX)
         }
       };
@@ -36,7 +42,7 @@ var globalMap = document.querySelector('.map__pins');
   };
 
   /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
-  var items = createHouse(window.const.COUNT_AD);
+  var items = createHouse(COUNT_AD);
 
   var createFragment = function (arr) {
 
@@ -55,8 +61,8 @@ var globalMap = document.querySelector('.map__pins');
       imageItem.alt = 'Заголовок будущего объявления';
 
       /* Меняем координаты */
-      houseElements.style.left = items[i]['location']['x'] + (window.const.PIN_WIDTH / 2) + 'px';
-      houseElements.style.top = items[i]['location']['y'] - window.const.PIN_HEIGHT + 'px';
+      houseElements.style.left = items[i]['location']['x'] + (PIN_WIDTH / 2) + 'px';
+      houseElements.style.top = items[i]['location']['y'] - PIN_HEIGHT + 'px';
 
       /* Вставляем объекты в фрагмент */
       fragment.appendChild(houseElements);
@@ -70,7 +76,8 @@ var globalMap = document.querySelector('.map__pins');
     fragment: createFragment,
     items: items,
     globalMap: globalMap,
-    mapPinMain: mapPinMain
+    mapPinMain: mapPinMain,
+    TYPE_HOUSE: TYPE_HOUSE
   };
 
 })();
