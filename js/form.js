@@ -20,9 +20,9 @@
   };
 
   /* Вызов функций для добавления атрибутов Disabled*/
-  window.utilis.addAttributeFieldsDisabled(adMapFieldFilters);
-  window.utilis.addAttributeFieldsDisabled(adFormField);
-  window.utilis.addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
+  window.map.addAttributeFieldsDisabled(adMapFieldFilters);
+  window.map.addAttributeFieldsDisabled(adFormField);
+  window.map.addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
 
   /* Замена цены при смене типа жилья */
   var onSelectTypeHouse = function (evt) {

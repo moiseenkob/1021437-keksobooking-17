@@ -23,7 +23,7 @@ var OnMouseDragAndDromMove = function (evt) {
       x: moveEvt.clientX,
       y: moveEvt.clientY
     };
-    window.utilis.activeWindow();
+    window.map.activeWindow();
 
     /* Высота */
     var coordinateYPoint = window.mainPin.mapPinMain.offsetTop - shift.y;
@@ -44,13 +44,13 @@ var OnMouseDragAndDromMove = function (evt) {
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
 
-    window.utilis.activeWindow();
+    window.map.activeWindow();
     window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
 
     /* Переменная для удаления данных с исключением основной метки */
     var pinsMap = window.createCards.globalMap.querySelectorAll('.map__pin:not(.map__pin--main)');
     /* При отжатии кнопки удаляем элементы */
-    window.utilis.removeItems(pinsMap);
+    window.map.removeItems(pinsMap);
     /* Добавляем новые элементы */
     var fragment = window.createCards.fragment(window.createCards.items);
     window.createCards.globalMap.appendChild(fragment);
