@@ -2,9 +2,9 @@
 
 
 (function () {
+
   var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
   var globalMap = document.querySelector('.map__pins');
-  var mapPinMain = document.querySelector('.map__pin--main');
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
@@ -76,8 +76,8 @@
     fragment: createFragment,
     items: items,
     globalMap: globalMap,
-    mapPinMain: mapPinMain,
     TYPE_HOUSE: TYPE_HOUSE
   };
 
 })();
+

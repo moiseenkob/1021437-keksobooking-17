@@ -31,6 +31,12 @@
     setMinPriceField.min = PRICE_ONE_NIGHT[value];
   };
 
+  /* Функция сброса значений */
+  var setDefaultValues = function () {
+    setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
+    inputAddress.value = window.mainPin.getMainPinCoordinates('disabled');
+  };
+
   /* Прослушиваем событие для указания цены при выборе типа жилья */
   selectTypeHouse.addEventListener('change', onSelectTypeHouse);
 
@@ -47,20 +53,16 @@
   /* Прослушиваем событие для указания время заселения и выезда */
   setTimeForm.addEventListener('change', onSetTimeFormChange);
 
-  /* Функция удаления лишних классов и атрибутов*/
-  var activeWindow = function () {
-    window.utilis.removeAttributeFieldsDisabled(adFormField);
-    window.utilis.removeAttributeFieldsDisabled(adMapFieldFilters);
-    window.utilis.removeAttributeFieldsDisabled(adMapFieldFiltersFeatures);
-    document.querySelector('.map').classList.remove('map--faded');
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-    document.querySelector('.map').classList.remove('map--faded');
-  };
+  setDefaultValues();
 
   window.form = {
     setMinPriceField: setMinPriceField,
-    activeWindow: activeWindow,
-    inputAddress: inputAddress
+    inputAddress: inputAddress,
+    PRICE_ONE_NIGHT: PRICE_ONE_NIGHT,
+    setDefaultValues: setDefaultValues,
+    adFormField: adFormField,
+    adMapFieldFilters: adMapFieldFilters,
+    adMapFieldFiltersFeatures: adMapFieldFiltersFeatures
   };
 
 })();
