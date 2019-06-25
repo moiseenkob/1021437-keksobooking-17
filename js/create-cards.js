@@ -73,10 +73,9 @@
   };
 
   window.createCards = {
-    fragment: createFragment,
+    createFragment: createFragment,
     items: items,
-    globalMap: globalMap,
-    TYPE_HOUSE: TYPE_HOUSE
+    globalMap: globalMap
   };
 
 })();

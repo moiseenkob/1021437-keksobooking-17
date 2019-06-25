@@ -19,16 +19,36 @@
     'palace': 10000
   };
 
+
+  /* Функция добавление атрибута Disabled */
+  var addAttributeFieldsDisabled = function (arr) {
+    for (var i = 0; i < arr.length; i++) {
+      arr[i].setAttribute('disabled', '');
+    }
+  };
+
   /* Вызов функций для добавления атрибутов Disabled*/
-  window.map.addAttributeFieldsDisabled(adMapFieldFilters);
-  window.map.addAttributeFieldsDisabled(adFormField);
-  window.map.addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
+  addAttributeFieldsDisabled(adMapFieldFilters);
+  addAttributeFieldsDisabled(adFormField);
+  addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
 
   /* Замена цены при смене типа жилья */
   var onSelectTypeHouse = function (evt) {
     var value = evt.target.value;
     setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
     setMinPriceField.min = PRICE_ONE_NIGHT[value];
+  };
+
+  var removeAttributeFieldsDisabled = function () {
+    for (var i = 0; i < adFormField.length; i++) {
+      adFormField[i].removeAttribute('disabled');
+    }
+    for (var y = 0; y < adMapFieldFilters.length; y++) {
+      adMapFieldFilters[y].removeAttribute('disabled');
+    }
+    for (var j = 0; j < adMapFieldFiltersFeatures.length; j++) {
+      adMapFieldFiltersFeatures[j].removeAttribute('disabled');
+    }
   };
 
   /* Функция сброса значений */
@@ -56,13 +76,8 @@
   setDefaultValues();
 
   window.form = {
-    setMinPriceField: setMinPriceField,
     inputAddress: inputAddress,
-    PRICE_ONE_NIGHT: PRICE_ONE_NIGHT,
-    setDefaultValues: setDefaultValues,
-    adFormField: adFormField,
-    adMapFieldFilters: adMapFieldFilters,
-    adMapFieldFiltersFeatures: adMapFieldFiltersFeatures
+    removeAttributeFieldsDisabled: removeAttributeFieldsDisabled
   };
 
 })();
