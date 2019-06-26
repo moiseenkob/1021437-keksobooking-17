@@ -3,46 +3,25 @@
 
 (function () {
 
-  var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
-  var globalMap = document.querySelector('.map__pins');
+  /* Функция удаления элементов */
+  var removeItems = function () {
+    var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    if (pinsMap.length > 0) {
+      for (var i = 0; i < pinsMap.length; i++) {
+        pinsMap[i].remove();
+      }
+    }
+  };
+
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+  /* Переменная для удаления данных с исключением основной метки */
+
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
   var COUNT_AD = 8;
-  var MIN_VALUE = 1;
-
-  /* Функция рандомного числа */
-  var getRandomNumber = function (min, max) {
-    return Math.floor(min + Math.random() * (max + MIN_VALUE - min));
-  };
-
-  /* Создал функцию с объявлениями 8 объектов */
-  var createHouse = function (val) {
-    var objectHouse = [];
-    for (var i = 1; i <= val; i++) {
-
-      /* Добавил рандом типа жилья */
-      var item = {
-        'author': {
-          'avatar': 'img/avatars/user0' + i + '.png'
-        },
-        'offer': {
-          'type': TYPE_HOUSE[getRandomNumber(0, TYPE_HOUSE.length - MIN_VALUE)]
-        },
-        'location': {
-          'x': getRandomNumber(MIN_VALUE, globalMap.clientWidth),
-          'y': getRandomNumber(window.const.Y_MAP_MIN, window.const.Y_MAP_MAX)
-        }
-      };
-
-      /* Добаввляем наши объекты в массив */
-      objectHouse.push(item);
-    }
-    return objectHouse;
-  };
 
   /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
-  var items = createHouse(COUNT_AD);
+  var items = window.generationElements.createHouse(COUNT_AD);
 
   var createFragment = function (arr) {
 
@@ -72,10 +51,14 @@
     return fragment;
   };
 
-  window.createCards = {
-    createFragment: createFragment,
-    items: items,
-    globalMap: globalMap
+  var renderElements = function () {
+    var fragment = createFragment(items);
+    window.generationElements.globalMap.appendChild(fragment);
+  };
+
+  window.cards = {
+    removeItems: removeItems,
+    renderElements: renderElements
   };
 
 })();

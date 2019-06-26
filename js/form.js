@@ -12,13 +12,13 @@
   var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
   var adFormField = document.querySelectorAll('.ad-form fieldset');
   var inputAddress = document.querySelector('input[name="address"]');
+  var adFormMain = document.querySelector('.ad-form');
   var PRICE_ONE_NIGHT = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
-
 
   /* Функция добавление атрибута Disabled */
   var addAttributeFieldsDisabled = function (arr) {
@@ -39,7 +39,7 @@
     setMinPriceField.min = PRICE_ONE_NIGHT[value];
   };
 
-  var removeAttributeFieldsDisabled = function () {
+  var activeForm = function () {
     for (var i = 0; i < adFormField.length; i++) {
       adFormField[i].removeAttribute('disabled');
     }
@@ -49,6 +49,7 @@
     for (var j = 0; j < adMapFieldFiltersFeatures.length; j++) {
       adMapFieldFiltersFeatures[j].removeAttribute('disabled');
     }
+    adFormMain.classList.remove('ad-form--disabled');
   };
 
   /* Функция сброса значений */
@@ -77,7 +78,7 @@
 
   window.form = {
     inputAddress: inputAddress,
-    removeAttributeFieldsDisabled: removeAttributeFieldsDisabled
+    activeForm: activeForm
   };
 
 })();

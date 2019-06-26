@@ -24,7 +24,9 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      window.map.activeWindow();
+
+      window.form.activeForm();
+      window.map.activeMap();
 
       /* Высота */
       var coordinateYPoint = window.mainPin.mapPinMain.offsetTop - shift.y;
@@ -45,16 +47,15 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      window.map.activeWindow();
+      window.form.activeForm();
+      window.map.activeMap();
+
       window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
 
-      /* Переменная для удаления данных с исключением основной метки */
-      var pinsMap = window.createCards.globalMap.querySelectorAll('.map__pin:not(.map__pin--main)');
       /* При отжатии кнопки удаляем элементы */
-      window.map.removeItems(pinsMap);
+      window.cards.removeItems();
       /* Добавляем новые элементы */
-      var fragment = window.createCards.createFragment(window.createCards.items);
-      window.createCards.globalMap.appendChild(fragment);
+      window.cards.renderElements();
 
     };
 
