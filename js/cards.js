@@ -3,6 +3,11 @@
 
 (function () {
 
+  var globalMap = document.querySelector('.map__pins');
+  var PIN_WIDTH = 50;
+  var PIN_HEIGHT = 70;
+  var COUNT_AD = 8;
+
   /* Функция удаления элементов */
   var removeItems = function () {
     var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
@@ -14,11 +19,6 @@
   };
 
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
-  /* Переменная для удаления данных с исключением основной метки */
-
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
-  var COUNT_AD = 8;
 
   /* Мы вызвали функцию чтобы создать объекты, которые взяли из базы "COUNT_AD" */
   var items = window.generationElements.createHouse(COUNT_AD);
@@ -53,12 +53,13 @@
 
   var renderElements = function () {
     var fragment = createFragment(items);
-    window.generationElements.globalMap.appendChild(fragment);
+    globalMap.appendChild(fragment);
   };
 
   window.cards = {
     removeItems: removeItems,
-    renderElements: renderElements
+    renderElements: renderElements,
+    globalMap: globalMap
   };
 
 })();

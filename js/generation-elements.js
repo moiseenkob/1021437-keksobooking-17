@@ -1,10 +1,9 @@
 'use strict';
 
 (function () {
-
+  var MAX_VALUE = 1135;
   var MIN_VALUE = 1;
   var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];
-  var globalMap = document.querySelector('.map__pins');
 
   /* Функция рандомного числа */
   var getRandomNumber = function (min, max) {
@@ -25,7 +24,7 @@
           'type': TYPE_HOUSE[getRandomNumber(0, TYPE_HOUSE.length - MIN_VALUE)]
         },
         'location': {
-          'x': getRandomNumber(MIN_VALUE, globalMap.clientWidth),
+          'x': getRandomNumber(MIN_VALUE, MAX_VALUE),
           'y': getRandomNumber(window.const.Y_MAP_MIN, window.const.Y_MAP_MAX)
         }
       };
@@ -37,8 +36,7 @@
   };
 
   window.generationElements = {
-    createHouse: createHouse,
-    globalMap: globalMap
+    createHouse: createHouse
   };
 
 })();
