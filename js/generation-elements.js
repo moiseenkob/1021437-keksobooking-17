@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   var MAX_VALUE = 1135;
   var MIN_VALUE = 1;
   var TYPE_HOUSE = ['palace', 'flat', 'house', 'bungalo'];

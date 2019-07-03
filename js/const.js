@@ -6,6 +6,6 @@
 
   window.const = {
     Y_MAP_MIN: Y_MAP_MIN,
-    Y_MAP_MAX: Y_MAP_MAX,
+    Y_MAP_MAX: Y_MAP_MAX
   };
 })();

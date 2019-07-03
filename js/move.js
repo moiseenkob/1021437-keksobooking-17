@@ -54,8 +54,8 @@
 
       /* При отжатии кнопки удаляем элементы */
       window.cards.removeItems();
-      /* Добавляем новые элементы */
-      window.cards.renderElements();
+
+      window.backend.loadData(window.cards.getSuccessItems, window.error.createFormErrorInfo);
 
     };
 
