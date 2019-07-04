@@ -8,7 +8,7 @@
   var PIN_HEIGHT = 70;
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
 
-  /* Функция удаления элементов */
+  /* Function remove items */
   var removeItems = function () {
     var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     if (pinsMap.length > 0) {
@@ -22,17 +22,17 @@
 
     var fragment = document.createDocumentFragment();
 
-    /* С помощью цикла пробегаемся на каждом элементе и вставляем данные из нашей функции */
+    /* Insert data from our function */
     for (var i = 0; i < arr.length; i++) {
-      /* Клонируем данные из шаблона */
+      /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);
-      /* Меняем изображения и alt на каждом элементе */
+      /* Changing data */
       var imageItem = houseElements.querySelector('img');
       imageItem.src = arr[i]['author']['avatar'];
       imageItem.alt = arr[i]['offer']['title'];
       houseElements.style.left = arr[i]['location']['x'] + (PIN_WIDTH / 2) + 'px';
       houseElements.style.top = arr[i]['location']['y'] - PIN_HEIGHT + 'px';
-      /* Вставляем объекты в фрагмент */
+      /* Insert objects into the fragment */
       fragment.appendChild(houseElements);
 
       globalMap.appendChild(fragment);

@@ -14,25 +14,25 @@
   var inputAddress = document.querySelector('input[name="address"]');
   var adFormMain = document.querySelector('.ad-form');
   var PRICE_ONE_NIGHT = {
-    'bungalo': 0,
+    'bungalow': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
 
-  /* Функция добавление атрибута Disabled */
+  /* The function of adding the attribute Disabled*/
   var addAttributeFieldsDisabled = function (arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].setAttribute('disabled', '');
     }
   };
 
-  /* Вызов функций для добавления атрибутов Disabled*/
+  /* Calling Functions to Add Disabled Attributes */
   addAttributeFieldsDisabled(adMapFieldFilters);
   addAttributeFieldsDisabled(adFormField);
   addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
 
-  /* Замена цены при смене типа жилья */
+  /* Replacing the price when changing the type of housing */
   var onSelectTypeHouse = function (evt) {
     var value = evt.target.value;
     setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
@@ -52,16 +52,16 @@
     adFormMain.classList.remove('ad-form--disabled');
   };
 
-  /* Функция сброса значений */
+  /* Reset function */
   var setDefaultValues = function () {
     setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
     inputAddress.value = window.mainPin.getMainPinCoordinates('disabled');
   };
 
-  /* Прослушиваем событие для указания цены при выборе типа жилья */
+  /* We listen to the event to indicate the price when choosing a type of housing */
   selectTypeHouse.addEventListener('change', onSelectTypeHouse);
 
-  /* Установка времени при выборе въезда или выезда */
+  /* Setting the time when choosing entry or exit */
   var onSetTimeFormChange = function (evt) {
     var target = evt.target;
     if (target.id === selectDateTimeIn.id) {
@@ -71,7 +71,7 @@
     }
   };
 
-  /* Прослушиваем событие для указания время заселения и выезда */
+  /* Listening event to indicate the time of settlement and departure */
   setTimeForm.addEventListener('change', onSetTimeFormChange);
 
   setDefaultValues();

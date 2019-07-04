@@ -1,31 +1,31 @@
 'use strict';
 
 (function () {
-  /* Путь откуда забераем данные  */
+  /* Data path  */
   var URL = 'https://js.dump.academy/keksobooking/data';
   var TIME_DELAY = 1000;
-  var STATUS_SUCCESFULL_CODE = 200;
+  var STATUS_SUCCESSFUL_CODE = 200;
   var STATUS_BAD_REQUEST_CODE = 400;
   var STATUS_UNAUTHORIZED_CODE = 401;
   var STATUS_NOT_FOUND_CODE = 404;
 
-  var errorHandler = function (xhrObject, statusXhr, onSuccess, onError) {
+  var statusHandler = function (xhrObject, statusXhr, onSuccess, onError) {
     switch (statusXhr) {
-      case STATUS_SUCCESFULL_CODE:
+      case STATUS_SUCCESSFUL_CODE:
         onSuccess(xhrObject.response);
         break;
       case STATUS_BAD_REQUEST_CODE:
-        onError('Cервер не смог обработать запрос');
+        onError('Could not process the request');
         break;
       case STATUS_UNAUTHORIZED_CODE:
-        onError('Пользователь не авторизован');
+        onError('User is not authorized');
         break;
       case STATUS_NOT_FOUND_CODE:
-        onError('Ничего не найдено');
+        onError('Not found');
         break;
 
       default:
-        onError('Статус ответа: ' + xhrObject.status + ' ' + xhrObject.statusText);
+        onError('Status: ' + xhrObject.status + ' ' + xhrObject.statusText);
     }
   };
 
@@ -35,15 +35,15 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      errorHandler(xhr, xhr.status, onSuccess, onError);
+      statusHandler(xhr, xhr.status, onSuccess, onError);
     });
 
-    /* Дополнительные обработчики ошибок */
+    /* Additional error handlers */
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения');
+      onError('Connection failed');
     });
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+      onError('The request did not have time to complete ' + xhr.timeout + 'мс');
     });
 
     xhr.timeout = TIME_DELAY;
