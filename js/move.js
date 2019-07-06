@@ -57,6 +57,7 @@
 
       window.backend.loadData(window.cards.getSuccessItems, window.error.createFormErrorInfo);
 
+      window.error.removeFormErrorInfo();
     };
 
     document.addEventListener('mousemove', onMouseMove);
