@@ -43,7 +43,7 @@
       onError('Connection failed');
     });
     xhr.addEventListener('timeout', function () {
-      onError('The request did not have time to complete ' + xhr.timeout + 'мс');
+      onError('The request did not have time to complete ' + xhr.timeout + 'ms');
     });
 
     xhr.timeout = TIME_DELAY;

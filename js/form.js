@@ -2,6 +2,12 @@
 
 (function () {
 
+  var PRICE_ONE_NIGHT = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
   var setTimeForm = document.querySelector('.ad-form__element--time');
@@ -13,12 +19,9 @@
   var adFormField = document.querySelectorAll('.ad-form fieldset');
   var inputAddress = document.querySelector('input[name="address"]');
   var adFormMain = document.querySelector('.ad-form');
-  var PRICE_ONE_NIGHT = {
-    'bungalow': 0,
-    'flat': 1000,
-    'house': 5000,
-    'palace': 10000
-  };
+  var selectHouse = document.querySelector('#type option[selected]').value;
+  var allHouse = [];
+
 
   /* The function of adding the attribute Disabled*/
   var addAttributeFieldsDisabled = function (arr) {
@@ -37,6 +40,22 @@
     var value = evt.target.value;
     setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
     setMinPriceField.min = PRICE_ONE_NIGHT[value];
+    selectHouse = value;
+    window.cards.removeItems();
+    updateItems();
+  };
+
+  var updateItems = function () {
+    var typeHouse = allHouse.filter(function (houseType) {
+      return houseType['offer']['type'] === selectHouse;
+    });
+    var newObjectOfFiveItems = window.filter.createLimitedObject(typeHouse);
+    window.cards.dataProcessing(newObjectOfFiveItems);
+  };
+
+  var successHandler = function (data) {
+    allHouse = data;
+    updateItems();
   };
 
   var activeForm = function () {
@@ -78,7 +97,9 @@
 
   window.form = {
     inputAddress: inputAddress,
-    activeForm: activeForm
+    activeForm: activeForm,
+    updateItems: updateItems,
+    successHandler: successHandler
   };
 
 })();

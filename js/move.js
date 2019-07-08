@@ -4,6 +4,8 @@
 
   var MAP_MIN_WIDTH = 0;
   var MAP_MAX_WIDTH = 1135;
+  var Y_MAP_MIN = 130;
+  var Y_MAP_MAX = 630;
 
   var OnMouseDragAndDropMove = function (evt) {
 
@@ -31,7 +33,7 @@
       /* Height and width */
       var coordinateYPoint = window.mainPin.mapPinMain.offsetTop - shift.y;
       var coordinateXPoint = window.mainPin.mapPinMain.offsetLeft - shift.x;
-      var isInvalidedTop = coordinateYPoint > window.const.Y_MAP_MAX || coordinateYPoint < window.const.Y_MAP_MIN;
+      var isInvalidedTop = coordinateYPoint > Y_MAP_MAX || coordinateYPoint < Y_MAP_MIN;
       var isInvalidedLeft = coordinateXPoint > MAP_MAX_WIDTH || coordinateXPoint <= MAP_MIN_WIDTH;
 
       window.mainPin.mapPinMain.style.top = isInvalidedTop ? window.mainPin.mapPinMain.style.top + 'px' : coordinateYPoint + 'px';
@@ -55,9 +57,9 @@
       /* When the button is pressed, we delete the elements */
       window.cards.removeItems();
 
-      window.backend.loadData(window.cards.getSuccessItems, window.error.createFormErrorInfo);
+      window.backend.loadData(window.form.successHandler, window.error.createModalErrorInfo);
 
-      window.error.removeFormErrorInfo();
+      window.error.removeModalErrorInfo();
     };
 
     document.addEventListener('mousemove', onMouseMove);

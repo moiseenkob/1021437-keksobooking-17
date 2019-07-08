@@ -4,7 +4,7 @@
 
   var map = document.querySelector('.map');
 
-  /* Функция удаления лишних классов и атрибутов*/
+  /* Function remove class and attribute*/
   var activeMap = function () {
     map.classList.remove('map--faded');
   };
