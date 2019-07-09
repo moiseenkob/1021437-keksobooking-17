@@ -57,7 +57,7 @@
       /* When the button is pressed, we delete the elements */
       window.cards.removeItems();
 
-      window.backend.loadData(window.form.successHandler, window.error.createModalErrorInfo);
+      window.backend.loadData(window.filter.createObjectFilterCountItems, window.error.createModalErrorInfo);
 
       window.error.removeModalErrorInfo();
     };
