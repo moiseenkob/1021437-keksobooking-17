@@ -6,7 +6,7 @@
   var MAP_MAX_WIDTH = 1135;
   var Y_MAP_MIN = 130;
   var Y_MAP_MAX = 630;
-
+  var flagRenderPins = false;
   var OnMouseDragAndDropMove = function (evt) {
 
     var startCoords = {
@@ -54,12 +54,14 @@
 
       window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
 
-      /* When the button is pressed, we delete the elements */
-      window.cards.removeItems();
-
-      window.backend.loadData(window.filter.createObjectFilterCountItems, window.error.createModalErrorInfo);
+      if (!flagRenderPins) {
+        window.cards.removeItems();
+        window.backend.loadData(window.filter.createObjectFilterCountItems, window.error.createModalErrorInfo);
+      }
+      flagRenderPins = true;
 
       window.error.removeModalErrorInfo();
+
     };
 
     document.addEventListener('mousemove', onMouseMove);
