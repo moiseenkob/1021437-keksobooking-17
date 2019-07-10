@@ -2,31 +2,32 @@
 
 (function () {
 
+  var COUNT_HOUSE_OF_MAP = 5;
+  var typeHouseFromFilter = document.querySelector('#housing-type');
   /* Empty array */
-  var newObjectOfFiveItems = [];
-
-  /* Function filter five items */
-  var createLimitedObject = function (value) {
-    return Array.from(value).slice(0, 5);
-  };
+  var newArrayAllItemsFromServer = [];
 
   /* Item count filter */
   var createObjectFilterCountItems = function (data) {
-    newObjectOfFiveItems = createLimitedObject(data);
-    window.cards.dataProcessing(newObjectOfFiveItems);
+    newArrayAllItemsFromServer = data;
+    window.cards.dataProcessing(data.slice(0, COUNT_HOUSE_OF_MAP));
   };
 
-  window.form.selectTypeHouse.addEventListener('change', function (evt) {
-    var filterTypeHouse = newObjectOfFiveItems.filter(function (house) {
-      return house['offer']['type'] === evt.target.value;
+  typeHouseFromFilter.addEventListener('change', function (evt) {
+    var housingTypeFilter = newArrayAllItemsFromServer.filter(function (houseItems) {
+      if (evt.target.value !== 'any') {
+        return houseItems['offer']['type'] === evt.target.value;
+      } else {
+        return houseItems;
+      }
     });
+    var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
     window.cards.removeItems();
-    window.cards.dataProcessing(filterTypeHouse);
+    window.cards.dataProcessing(newArrayFilterCountItems);
   });
 
 
   window.filter = {
-    createLimitedObject: createLimitedObject,
     createObjectFilterCountItems: createObjectFilterCountItems
   };
 
