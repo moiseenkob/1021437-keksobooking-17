@@ -2,7 +2,7 @@
 
 (function () {
 
-  var createFormErrorInfo = function (errorMessage) {
+  var createModalErrorInfo = function (errorMessage) {
     var node = document.createElement('div');
     node.classList.add('error-wrap');
     node.style = 'z-index: 3; text-align: center; background-color: red; transform: translate(-50%, -50%); padding: 25px; opacity: 0.9; color: #fff';
@@ -15,7 +15,7 @@
     document.body.insertAdjacentElement('afterBegin', node);
   };
 
-  var removeFormErrorInfo = function () {
+  var removeModalErrorInfo = function () {
     var itemErrorElement = document.querySelector('.error-wrap');
     if (itemErrorElement) {
       itemErrorElement.remove();
@@ -23,8 +23,8 @@
   };
 
   window.error = {
-    createFormErrorInfo: createFormErrorInfo,
-    removeFormErrorInfo: removeFormErrorInfo
+    createModalErrorInfo: createModalErrorInfo,
+    removeModalErrorInfo: removeModalErrorInfo
   };
 
 })();

@@ -4,23 +4,25 @@
   /* Data path  */
   var URL = 'https://js.dump.academy/keksobooking/data';
   var TIME_DELAY = 1000;
-  var STATUS_SUCCESSFUL_CODE = 200;
-  var STATUS_BAD_REQUEST_CODE = 400;
-  var STATUS_UNAUTHORIZED_CODE = 401;
-  var STATUS_NOT_FOUND_CODE = 404;
+  var StatusCode = {
+    SUCCESSFUL: 200,
+    BAD_REQUEST: 400,
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404,
+  };
 
   var statusHandler = function (xhrObject, statusXhr, onSuccess, onError) {
     switch (statusXhr) {
-      case STATUS_SUCCESSFUL_CODE:
+      case StatusCode.SUCCESSFUL:
         onSuccess(xhrObject.response);
         break;
-      case STATUS_BAD_REQUEST_CODE:
+      case StatusCode.BAD_REQUEST:
         onError('Could not process the request');
         break;
-      case STATUS_UNAUTHORIZED_CODE:
+      case StatusCode.UNAUTHORIZED:
         onError('User is not authorized');
         break;
-      case STATUS_NOT_FOUND_CODE:
+      case StatusCode.NOT_FOUND:
         onError('Not found');
         break;
 
@@ -43,7 +45,7 @@
       onError('Connection failed');
     });
     xhr.addEventListener('timeout', function () {
-      onError('The request did not have time to complete ' + xhr.timeout + 'мс');
+      onError('The request did not have time to complete ' + xhr.timeout + 'ms');
     });
 
     xhr.timeout = TIME_DELAY;
