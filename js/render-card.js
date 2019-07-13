@@ -2,6 +2,7 @@
 
 (function () {
 
+  var ESC_KEYCODE = 27;
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
   var mapPins = document.querySelector('.map');
   var allPinsAdt = mapPins.querySelector('.map__pins');
@@ -49,6 +50,18 @@
     var avatarCardsItems = cardElements.querySelector('.popup__avatar');
     var photosCardsItems = cardElements.querySelector('.popup__photos');
     var featuresCardsItems = cardElements.querySelector('.popup__features');
+
+    // Close card
+    var buttonCardClose = cardElements.querySelector('.popup__close');
+    buttonCardClose.addEventListener('click', function () {
+      cardElements.remove();
+    });
+    // Close card key ESC
+    buttonCardClose.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        cardElements.remove();
+      }
+    });
 
     // Set value of card
     titleCardsItems.textContent = item.offer.title;

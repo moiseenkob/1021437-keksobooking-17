@@ -23,21 +23,28 @@
     var fragment = document.createDocumentFragment();
 
     /* Insert data from our function */
-    for (var i = 0; i < arr.length; i++) {
+    arr.forEach(function (item) {
+
       /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);
+
       /* Changing data */
       var imageItem = houseElements.querySelector('img');
-      imageItem.src = arr[i]['author']['avatar'];
-      imageItem.alt = arr[i]['offer']['title'];
-      houseElements.style.left = arr[i]['location']['x'] + (PIN_WIDTH / 2) + 'px';
-      houseElements.style.top = arr[i]['location']['y'] - PIN_HEIGHT + 'px';
+      imageItem.src = item['author']['avatar'];
+      imageItem.alt = item['offer']['title'];
+      houseElements.style.left = item['location']['x'] + (PIN_WIDTH / 2) + 'px';
+      houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
+      // Render card
+      houseElements.addEventListener('click', function () {
+        window.renderCard(item);
+      });
+
       /* Insert objects into the fragment */
       fragment.appendChild(houseElements);
 
       globalMap.appendChild(fragment);
 
-    }
+    });
     return fragment;
   };
 
