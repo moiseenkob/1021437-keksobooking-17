@@ -54,8 +54,6 @@
 
   };
 
-  window.backend = {
-    loadData: loadData
-  };
+  window.backend = loadData;
 
 })();

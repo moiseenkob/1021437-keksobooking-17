@@ -79,9 +79,7 @@
 
   window.form = {
     inputAddress: inputAddress,
-    activeForm: activeForm,
-    selectTypeHouse: selectTypeHouse,
-    PRICE_ONE_NIGHT: PRICE_ONE_NIGHT
+    activeForm: activeForm
   };
 
 })();
