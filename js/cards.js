@@ -9,7 +9,7 @@
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
 
   /* Function remove items */
-  var removeItems = function () {
+  var removePins = function () {
     var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     if (pinsMap.length > 0) {
       for (var i = 0; i < pinsMap.length; i++) {
@@ -18,7 +18,7 @@
     }
   };
 
-  var dataProcessing = function (arr) {
+  var renderPins = function (arr) {
 
     var fragment = document.createDocumentFragment();
 
@@ -36,14 +36,14 @@
       fragment.appendChild(houseElements);
 
       globalMap.appendChild(fragment);
+
     }
     return fragment;
   };
 
-
   window.cards = {
-    removeItems: removeItems,
-    dataProcessing: dataProcessing
+    removePins: removePins,
+    renderPins: renderPins
   };
 
 })();

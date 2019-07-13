@@ -9,9 +9,7 @@
     map.classList.remove('map--faded');
   };
 
-  window.map = {
-    activeMap: activeMap
-  };
+  window.map = activeMap;
 
 })();
 

@@ -4,13 +4,13 @@
 
   var COUNT_HOUSE_OF_MAP = 5;
   var typeHouseFromFilter = document.querySelector('#housing-type');
-  /* Empty array */
   var newArrayAllItemsFromServer = [];
 
   /* Item count filter */
   var createObjectFilterCountItems = function (data) {
     newArrayAllItemsFromServer = data;
-    window.cards.dataProcessing(data.slice(0, COUNT_HOUSE_OF_MAP));
+    window.cards.renderPins(data.slice(0, COUNT_HOUSE_OF_MAP));
+    window.renderCard(data[0]);
   };
 
   typeHouseFromFilter.addEventListener('change', function (evt) {
@@ -22,13 +22,10 @@
       }
     });
     var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
-    window.cards.removeItems();
-    window.cards.dataProcessing(newArrayFilterCountItems);
+    window.cards.removePins();
+    window.cards.renderPins(newArrayFilterCountItems);
   });
 
-
-  window.filter = {
-    createObjectFilterCountItems: createObjectFilterCountItems
-  };
+  window.filter = createObjectFilterCountItems;
 
 })();

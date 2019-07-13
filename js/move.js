@@ -28,7 +28,7 @@
       };
 
       window.form.activeForm();
-      window.map.activeMap();
+      window.map();
 
       /* Height and width */
       var coordinateYPoint = window.mainPin.mapPinMain.offsetTop - shift.y;
@@ -50,18 +50,17 @@
       document.removeEventListener('mouseup', onMouseUp);
 
       window.form.activeForm();
-      window.map.activeMap();
+      window.map();
 
       window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
 
       if (!flagRenderPins) {
-        window.cards.removeItems();
-        window.backend.loadData(window.filter.createObjectFilterCountItems, window.error.createModalErrorInfo);
+        window.cards.removePins();
+        window.backend(window.filter, window.error.createModalErrorInfo);
       }
       flagRenderPins = true;
 
       window.error.removeModalErrorInfo();
-
     };
 
     document.addEventListener('mousemove', onMouseMove);
