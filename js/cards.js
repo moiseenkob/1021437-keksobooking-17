@@ -36,10 +36,10 @@
       fragment.appendChild(houseElements);
 
       globalMap.appendChild(fragment);
+
     }
     return fragment;
   };
-
 
   window.cards = {
     removeItems: removeItems,

@@ -8,6 +8,7 @@
     'house': 5000,
     'palace': 10000
   };
+
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
   var setTimeForm = document.querySelector('.ad-form__element--time');
@@ -79,7 +80,8 @@
   window.form = {
     inputAddress: inputAddress,
     activeForm: activeForm,
-    selectTypeHouse: selectTypeHouse
+    selectTypeHouse: selectTypeHouse,
+    PRICE_ONE_NIGHT: PRICE_ONE_NIGHT
   };
 
 })();

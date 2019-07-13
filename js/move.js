@@ -61,11 +61,11 @@
       flagRenderPins = true;
 
       window.error.removeModalErrorInfo();
-
     };
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    // var firstPin = document.querySelector('.map__pin:not(.map__pin--main)');
 
   };
 
