@@ -36,7 +36,13 @@
       houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
       // Render card
       houseElements.addEventListener('click', function () {
-        window.renderCard(item);
+        var firstCardOfMap = document.querySelector('.map__card');
+        if (firstCardOfMap !== null) {
+          firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+          window.renderCard(item);
+        } else {
+          window.renderCard(item);
+        }
       });
 
       /* Insert objects into the fragment */

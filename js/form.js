@@ -8,7 +8,6 @@
     'house': 5000,
     'palace': 10000
   };
-
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
   var setTimeForm = document.querySelector('.ad-form__element--time');
@@ -20,6 +19,9 @@
   var adFormField = document.querySelectorAll('.ad-form fieldset');
   var inputAddress = document.querySelector('input[name="address"]');
   var adFormMain = document.querySelector('.ad-form');
+  var roomCounter = document.querySelector('#room_number');
+  var selectGuest = document.querySelectorAll('#capacity option');
+  var newValueRoomCount = [];
 
   /* The function of adding the attribute Disabled*/
   var addAttributeFieldsDisabled = function (arr) {
@@ -27,6 +29,29 @@
       arr[i].setAttribute('disabled', '');
     }
   };
+  var DictionaryValueCountRooms = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
+
+  var setBorderValueCount = function (option, elements) {
+    option.forEach(function (item) {
+      if (elements.indexOf(item.value) !== -1) {
+        item.removeAttribute('disabled');
+      } else {
+        item.setAttribute('disabled', '');
+      }
+    });
+  };
+
+  roomCounter.addEventListener('change', function (evt) {
+    newValueRoomCount = evt.target.value;
+    newValueRoomCount = DictionaryValueCountRooms[newValueRoomCount];
+    setBorderValueCount(selectGuest, newValueRoomCount);
+  });
+
 
   /* Calling Functions to Add Disabled Attributes */
   addAttributeFieldsDisabled(adMapFieldFilters);

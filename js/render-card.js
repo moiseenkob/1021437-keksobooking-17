@@ -28,6 +28,8 @@
     }
   };
 
+
+
   var setFeatureCard = function (items, elements) {
     for (var i = 0; i < items.length; i++) {
       var element = document.createElement('li');
@@ -57,7 +59,7 @@
       cardElements.remove();
     });
     // Close card key ESC
-    buttonCardClose.addEventListener('keydown', function (evt) {
+    document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         cardElements.remove();
       }
