@@ -10,7 +10,6 @@
   var createObjectFilterCountItems = function (data) {
     newArrayAllItemsFromServer = data;
     window.cards.renderPins(data.slice(0, COUNT_HOUSE_OF_MAP));
-    window.renderCard(data[0]);
   };
 
   typeHouseFromFilter.addEventListener('change', function (evt) {
