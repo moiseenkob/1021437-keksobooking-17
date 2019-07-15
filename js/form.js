@@ -20,8 +20,11 @@
   var inputAddress = document.querySelector('input[name="address"]');
   var adFormMain = document.querySelector('.ad-form');
   var roomCounter = document.querySelector('#room_number');
-  var selectGuest = document.querySelectorAll('#capacity option');
+  var guestValue = document.querySelectorAll('#capacity option');
   var newValueRoomCount = [];
+  // var roomCountValue = '1';
+  // var guestCountValue = '3';
+  // var selectGuestField = document.querySelector('#capacity');
 
   /* The function of adding the attribute Disabled*/
   var addAttributeFieldsDisabled = function (arr) {
@@ -49,7 +52,7 @@
   roomCounter.addEventListener('change', function (evt) {
     newValueRoomCount = evt.target.value;
     newValueRoomCount = DictionaryValueCountRooms[newValueRoomCount];
-    setBorderValueCount(selectGuest, newValueRoomCount);
+    setBorderValueCount(guestValue, newValueRoomCount);
   });
 
 

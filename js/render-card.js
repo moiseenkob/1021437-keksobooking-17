@@ -28,8 +28,6 @@
     }
   };
 
-
-
   var setFeatureCard = function (items, elements) {
     for (var i = 0; i < items.length; i++) {
       var element = document.createElement('li');
