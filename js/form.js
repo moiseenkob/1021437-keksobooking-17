@@ -21,11 +21,11 @@
   var adFormMain = document.querySelector('.ad-form');
   var roomCounter = document.querySelector('#room_number');
   var guestValue = document.querySelectorAll('#capacity option');
-  var selectGuestField = document.querySelector('#capacity');
-  var buttonSendDataToServer = document.querySelector('.ad-form__submit');
+  // var selectGuestField = document.querySelector('#capacity');
+  // var buttonSendDataToServer = document.querySelector('.ad-form__submit');
   var newEmptyArr = [];
-  var roomCountValue = '1';
-  var guestCountValue = '3';
+  // var roomCountValue = '1';
+  // var guestCountValue = '3';
 
   var DictionaryValueCountRooms = {
     '1': ['1'],

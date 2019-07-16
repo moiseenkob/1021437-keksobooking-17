@@ -56,15 +56,14 @@
     buttonCardClose.addEventListener('click', function () {
       cardElements.remove();
     });
-    // Close card key ESC
-    document.addEventListener('keydown', function (evt) {
+
+    var onKeyPress = function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         cardElements.remove();
-        document.removeEventListener('keydown', function () {
-
-        });
       }
-    });
+    };
+    // Close card key ESC
+    document.addEventListener('keydown', onKeyPress);
 
     // Set value of card
     titleCardsItems.textContent = item.offer.title;
