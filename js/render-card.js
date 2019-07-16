@@ -45,7 +45,7 @@
     var priceCardsItems = cardElements.querySelector('.popup__text--price');
     var typeCardsItems = cardElements.querySelector('.popup__type');
     var roomsAndGuestsCardsItems = cardElements.querySelector('.popup__text--capacity');
-    var TimeBookingInAndOutCardsItems = cardElements.querySelector('.popup__text--time');
+    var timeBookingInAndOutCardsItems = cardElements.querySelector('.popup__text--time');
     var descriptionCardsItems = cardElements.querySelector('.popup__description');
     var avatarCardsItems = cardElements.querySelector('.popup__avatar');
     var photosCardsItems = cardElements.querySelector('.popup__photos');
@@ -60,6 +60,9 @@
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         cardElements.remove();
+        document.removeEventListener('keydown', function () {
+
+        });
       }
     });
 
@@ -69,7 +72,7 @@
     priceCardsItems.textContent = item.offer.price + '₽/ночь.';
     typeCardsItems.textContent = DictionaryHouse[item.offer.type];
     roomsAndGuestsCardsItems.textContent = item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей';
-    TimeBookingInAndOutCardsItems.textContent = 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout;
+    timeBookingInAndOutCardsItems.textContent = 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout;
     descriptionCardsItems.textContent = item.offer.description;
     avatarCardsItems.src = item.author.avatar;
 

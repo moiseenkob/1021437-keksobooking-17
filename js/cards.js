@@ -18,12 +18,12 @@
     }
   };
 
-  var renderPins = function (arr) {
+  var renderPins = function (pin) {
 
     var fragment = document.createDocumentFragment();
 
     /* Insert data from our function */
-    arr.forEach(function (item) {
+    pin.forEach(function (item) {
 
       /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);

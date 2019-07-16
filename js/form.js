@@ -21,17 +21,12 @@
   var adFormMain = document.querySelector('.ad-form');
   var roomCounter = document.querySelector('#room_number');
   var guestValue = document.querySelectorAll('#capacity option');
-  var newValueRoomCount = [];
-  // var roomCountValue = '1';
-  // var guestCountValue = '3';
-  // var selectGuestField = document.querySelector('#capacity');
+  var selectGuestField = document.querySelector('#capacity');
+  var buttonSendDataToServer = document.querySelector('.ad-form__submit');
+  var newEmptyArr = [];
+  var roomCountValue = '1';
+  var guestCountValue = '3';
 
-  /* The function of adding the attribute Disabled*/
-  var addAttributeFieldsDisabled = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      arr[i].setAttribute('disabled', '');
-    }
-  };
   var DictionaryValueCountRooms = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -49,12 +44,60 @@
     });
   };
 
-  roomCounter.addEventListener('change', function (evt) {
-    newValueRoomCount = evt.target.value;
-    newValueRoomCount = DictionaryValueCountRooms[newValueRoomCount];
-    setBorderValueCount(guestValue, newValueRoomCount);
-  });
+  var onSelectChangeRoomCount = function (evt) {
+    newEmptyArr = evt.target.value;
+    newEmptyArr = DictionaryValueCountRooms[newEmptyArr];
+    setBorderValueCount(guestValue, newEmptyArr);
+  };
 
+  roomCounter.addEventListener('change', onSelectChangeRoomCount);
+
+
+  // var onSelectChangeRoomCount = function (evt) {
+  //   newEmptyArr = evt.target.value;
+  //   roomCountValue = newEmptyArr;
+  //   // console.log(roomCountValue + ' roomCountValue');
+  //   newEmptyArr = DictionaryValueCountRooms[newEmptyArr];
+  //   setBorderValueCount(guestValue, roomCountValue);
+  //   // onSelectGuestCountValidation();
+  //   // buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
+  // };
+
+  // var onSelectChangeGuestCount = function (evt) {
+  //   guestCountValue = evt.target.value;
+  //   // console.log(guestCountValue + ' guestCountValue');
+  //   // onSelectGuestCountValidation();
+  //   // buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
+  // };
+
+  // var onSelectGuestCountValidation = function () {
+  //   console.log('roomCountValue ' + roomCountValue + ' guestCountValue ' + guestCountValue)
+  //   if (roomCountValue < guestCountValue) {
+  //     selectGuestField.setCustomValidity('Change the number of guests');
+  //     selectGuestField.style.background = '#ff000052';
+  //     buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
+  //   } else if (roomCountValue >= guestCountValue) {
+  //     console.log('Мы тут?');
+  //     selectGuestField.setCustomValidity('');
+  //     selectGuestField.style.background = 'white';
+  //   }
+  //   selectGuestField.removeEventListener('change', onSelectChangeGuestCount);
+  // };
+
+  /* Select Room */
+
+  /* Select Guest */
+  // selectGuestField.addEventListener('change', onSelectChangeGuestCount);
+  /* Button */
+  // buttonSendDataToServer.addEventListener('click', onSelectGuestCountValidation);
+
+
+  /* The function of adding the attribute Disabled*/
+  var addAttributeFieldsDisabled = function (arr) {
+    for (var i = 0; i < arr.length; i++) {
+      arr[i].setAttribute('disabled', '');
+    }
+  };
 
   /* Calling Functions to Add Disabled Attributes */
   addAttributeFieldsDisabled(adMapFieldFilters);

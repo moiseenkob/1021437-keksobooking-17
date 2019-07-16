@@ -2,7 +2,7 @@
 
 (function () {
   /* Data path  */
-  var URL = 'https://js.dump.academy/keksobooking/data';
+
   var TIME_DELAY = 1000;
   var StatusCode = {
     SUCCESSFUL: 200,
@@ -10,8 +10,8 @@
     UNAUTHORIZED: 401,
     NOT_FOUND: 404,
   };
-
-  var statusHandler = function (xhrObject, statusXhr, onSuccess, onError) {
+  var URL = 'https://js.dump.academy/keksobooking/data';
+  var getStatusHandler = function (xhrObject, statusXhr, onSuccess, onError) {
     switch (statusXhr) {
       case StatusCode.SUCCESSFUL:
         onSuccess(xhrObject.response);
@@ -31,13 +31,13 @@
     }
   };
 
-  var loadData = function (onSuccess, onError) {
+  var getDataFromServer = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      statusHandler(xhr, xhr.status, onSuccess, onError);
+      getStatusHandler(xhr, xhr.status, onSuccess, onError);
     });
 
     /* Additional error handlers */
@@ -54,6 +54,6 @@
 
   };
 
-  window.backend = loadData;
+  window.backend = getDataFromServer;
 
 })();
