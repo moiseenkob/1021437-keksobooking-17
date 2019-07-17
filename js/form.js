@@ -8,6 +8,8 @@
     'house': 5000,
     'palace': 10000
   };
+  var MAX_ROOM = 100;
+  var MIN_GUEST = 0;
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
   var setTimeForm = document.querySelector('.ad-form__element--time');
@@ -21,11 +23,10 @@
   var adFormMain = document.querySelector('.ad-form');
   var roomCounter = document.querySelector('#room_number');
   var guestValue = document.querySelectorAll('#capacity option');
-  // var selectGuestField = document.querySelector('#capacity');
-  // var buttonSendDataToServer = document.querySelector('.ad-form__submit');
-  var newEmptyArr = [];
-  // var roomCountValue = '1';
-  // var guestCountValue = '3';
+  var selectGuestField = document.querySelector('#capacity');
+  var dataRoom = [];
+  var roomCountValue = '1';
+  var guestCountValue = '3';
 
   var DictionaryValueCountRooms = {
     '1': ['1'],
@@ -36,61 +37,41 @@
 
   var setBorderValueCount = function (option, elements) {
     option.forEach(function (item) {
-      if (elements.indexOf(item.value) !== -1) {
-        item.removeAttribute('disabled');
-      } else {
-        item.setAttribute('disabled', '');
-      }
+      item.disabled = elements.indexOf(item.value) === -1;
     });
   };
 
   var onSelectChangeRoomCount = function (evt) {
-    newEmptyArr = evt.target.value;
-    newEmptyArr = DictionaryValueCountRooms[newEmptyArr];
-    setBorderValueCount(guestValue, newEmptyArr);
+    roomCountValue = evt.target.value;
+    dataRoom = DictionaryValueCountRooms[evt.target.value];
+    setBorderValueCount(guestValue, dataRoom);
+    onSelectGuestCountValidation(roomCountValue, guestCountValue);
   };
 
-  roomCounter.addEventListener('change', onSelectChangeRoomCount);
-
-
-  // var onSelectChangeRoomCount = function (evt) {
-  //   newEmptyArr = evt.target.value;
-  //   roomCountValue = newEmptyArr;
-  //   // console.log(roomCountValue + ' roomCountValue');
-  //   newEmptyArr = DictionaryValueCountRooms[newEmptyArr];
-  //   setBorderValueCount(guestValue, roomCountValue);
-  //   // onSelectGuestCountValidation();
-  //   // buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
-  // };
-
-  // var onSelectChangeGuestCount = function (evt) {
-  //   guestCountValue = evt.target.value;
-  //   // console.log(guestCountValue + ' guestCountValue');
-  //   // onSelectGuestCountValidation();
-  //   // buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
-  // };
-
-  // var onSelectGuestCountValidation = function () {
-  //   console.log('roomCountValue ' + roomCountValue + ' guestCountValue ' + guestCountValue)
-  //   if (roomCountValue < guestCountValue) {
-  //     selectGuestField.setCustomValidity('Change the number of guests');
-  //     selectGuestField.style.background = '#ff000052';
-  //     buttonSendDataToServer.removeEventListener('click', onSelectGuestCountValidation);
-  //   } else if (roomCountValue >= guestCountValue) {
-  //     console.log('Мы тут?');
-  //     selectGuestField.setCustomValidity('');
-  //     selectGuestField.style.background = 'white';
-  //   }
-  //   selectGuestField.removeEventListener('change', onSelectChangeGuestCount);
-  // };
+  var onSelectChangeGuestCount = function (evt) {
+    guestCountValue = evt.target.value;
+    onSelectGuestCountValidation(roomCountValue, guestCountValue);
+  };
 
   /* Select Room */
-
+  roomCounter.addEventListener('change', onSelectChangeRoomCount);
   /* Select Guest */
-  // selectGuestField.addEventListener('change', onSelectChangeGuestCount);
-  /* Button */
-  // buttonSendDataToServer.addEventListener('click', onSelectGuestCountValidation);
+  selectGuestField.addEventListener('change', onSelectChangeGuestCount);
 
+  var onSelectGuestCountValidation = function (countRoom, countGuest) {
+    var room = parseInt(countRoom, 10);
+    var guest = parseInt(countGuest, 10);
+    if (room < guest) {
+      selectGuestField.setCustomValidity('Change the number of guests');
+      selectGuestField.style.background = '#ff000052';
+    } else if ((room < MAX_ROOM && guest === MIN_GUEST) || (room === MAX_ROOM && guest > MIN_GUEST)) {
+      selectGuestField.setCustomValidity('Change the number of guests');
+      selectGuestField.style.background = '#ff000052';
+    } else {
+      selectGuestField.setCustomValidity('');
+      selectGuestField.style.background = 'white';
+    }
+  };
 
   /* The function of adding the attribute Disabled*/
   var addAttributeFieldsDisabled = function (arr) {
