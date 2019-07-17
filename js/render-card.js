@@ -14,7 +14,6 @@
   };
 
   var setPhotosCard = function (items, element) {
-
     if (items.length <= 0) {
       element.remove();
     } else {

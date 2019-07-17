@@ -55,12 +55,14 @@
 
   /* Select Room */
   roomCounter.addEventListener('change', onSelectChangeRoomCount);
+
   /* Select Guest */
   selectGuestField.addEventListener('change', onSelectChangeGuestCount);
 
   var onSelectGuestCountValidation = function (countRoom, countGuest) {
     var room = parseInt(countRoom, 10);
     var guest = parseInt(countGuest, 10);
+
     if (room < guest) {
       selectGuestField.setCustomValidity('Change the number of guests');
       selectGuestField.style.background = '#ff000052';
