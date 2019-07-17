@@ -7,6 +7,7 @@
   var Y_MAP_MIN = 130;
   var Y_MAP_MAX = 630;
   var flagRenderPins = false;
+
   var OnMouseDragAndDropMove = function (evt) {
 
     var startCoords = {

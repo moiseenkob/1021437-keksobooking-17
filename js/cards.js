@@ -18,12 +18,12 @@
     }
   };
 
-  var renderPins = function (arr) {
+  var renderPins = function (pin) {
 
     var fragment = document.createDocumentFragment();
 
     /* Insert data from our function */
-    arr.forEach(function (item) {
+    pin.forEach(function (item) {
 
       /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);
@@ -36,7 +36,13 @@
       houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
       // Render card
       houseElements.addEventListener('click', function () {
-        window.renderCard(item);
+        var firstCardOfMap = document.querySelector('.map__card');
+        if (firstCardOfMap !== null) {
+          firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+          window.renderCard(item);
+        } else {
+          window.renderCard(item);
+        }
       });
 
       /* Insert objects into the fragment */
