@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  /* Data path  */
 
   var TIME_DELAY = 1000;
   var StatusCode = {
@@ -10,7 +9,9 @@
     UNAUTHORIZED: 401,
     NOT_FOUND: 404,
   };
-  var URL = 'https://js.dump.academy/keksobooking/data';
+  var URL_ACCEPT_DATA_FROM_SERVER = 'https://js.dump.academy/keksobooking/data';
+  var URL_SEND_DATA_TO_SERVER = 'https://js.dump.academy/keksobooking';
+
   var getStatusHandler = function (xhrObject, statusXhr, onSuccess, onError) {
     switch (statusXhr) {
       case StatusCode.SUCCESSFUL:
@@ -49,11 +50,35 @@
     });
 
     xhr.timeout = TIME_DELAY;
-    xhr.open('GET', URL);
+    xhr.open('GET', URL_ACCEPT_DATA_FROM_SERVER);
     xhr.send();
 
   };
 
-  window.backend = getDataFromServer;
+
+  var uploadDataToServer = function (data, onSuccess, onError) {
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      getStatusHandler(xhr, xhr.status, onSuccess, onError);
+    });
+
+    xhr.addEventListener('error', function () {
+      onError();
+    });
+    xhr.addEventListener('timeout', function () {
+      onError();
+    });
+
+    xhr.open('POST', URL_SEND_DATA_TO_SERVER);
+    xhr.send(data);
+
+  };
+
+  window.backend = {
+    getDataFromServer: getDataFromServer,
+    uploadDataToServer: uploadDataToServer
+  };
 
 })();

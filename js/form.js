@@ -2,14 +2,27 @@
 
 (function () {
 
+
+  var MAX_ROOM = 100;
+  var MIN_GUEST = 0;
+  var ESC_KEYCODE = 27;
+  var DEFAULT_VALUE_MAIN_PIN = '603, 449';
+  var DefaultPositionMainPin = {
+    x: 570,
+    y: 375
+  };
+  var DictionaryValueCountRooms = {
+    '1': ['1'],
+    '2': ['1', '2'],
+    '3': ['1', '2', '3'],
+    '100': ['0']
+  };
   var PRICE_ONE_NIGHT = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
     'palace': 10000
   };
-  var MAX_ROOM = 100;
-  var MIN_GUEST = 0;
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
   var setTimeForm = document.querySelector('.ad-form__element--time');
@@ -27,14 +40,16 @@
   var dataRoom = [];
   var roomCountValue = '1';
   var guestCountValue = '3';
+  var form = document.querySelector('.ad-form');
+  var templateSuccessMessage = document.querySelector('#success').content.querySelector('.success');
+  var templateErrorMessage = document.querySelector('#error').content.querySelector('.error');
+  var inputTitle = document.querySelector('#title');
+  var textDescription = document.querySelector('#description');
+  var blockMessage;
+  var fieldFeatures = document.querySelectorAll('.features input');
 
-  var DictionaryValueCountRooms = {
-    '1': ['1'],
-    '2': ['1', '2'],
-    '3': ['1', '2', '3'],
-    '100': ['0']
-  };
 
+  /* Disabled count guest else room > guest */
   var setBorderValueCount = function (option, elements) {
     option.forEach(function (item) {
       item.disabled = elements.indexOf(item.value) === -1;
@@ -60,19 +75,87 @@
   selectGuestField.addEventListener('change', onSelectChangeGuestCount);
 
   var onSelectGuestCountValidation = function (countRoom, countGuest) {
+
     var room = parseInt(countRoom, 10);
     var guest = parseInt(countGuest, 10);
-
     if (room < guest) {
       selectGuestField.setCustomValidity('Change the number of guests');
-      selectGuestField.style.background = '#ff000052';
     } else if ((room < MAX_ROOM && guest === MIN_GUEST) || (room === MAX_ROOM && guest > MIN_GUEST)) {
       selectGuestField.setCustomValidity('Change the number of guests');
-      selectGuestField.style.background = '#ff000052';
     } else {
       selectGuestField.setCustomValidity('');
       selectGuestField.style.background = 'white';
     }
+
+  };
+
+  // Default value count room and guest
+  var setDefaultValueCountGuest = function () {
+    selectGuestField.value = '1';
+    guestCountValue = '1';
+    onSelectGuestCountValidation(roomCountValue, guestCountValue);
+  };
+  setDefaultValueCountGuest();
+
+  var onClickCloseMessage = function () {
+    blockMessage.remove();
+  };
+
+  var clearMapOfSuccessSendDataToServer = function () {
+    inputTitle.value = '';
+    setMinPriceField.value = '';
+    textDescription.value = '';
+    checkedFieldFeaturesDisabled(fieldFeatures);
+  };
+
+  var messageSuccessfulDataToServer = function () {
+    blockMessage = templateSuccessMessage.cloneNode(true);
+    form.appendChild(blockMessage);
+  };
+
+  var messageErrorDataToServer = function () {
+    blockMessage = templateErrorMessage.cloneNode(true);
+    form.appendChild(blockMessage);
+  };
+
+  // Close card key ESC
+  var onKeyPressCloseMessage = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      blockMessage.remove();
+    }
+  };
+
+  form.addEventListener('submit', function (evt) {
+    var formData = new FormData(form);
+    window.backend.uploadDataToServer(formData, messageSuccessfulDataToServer, messageErrorDataToServer);
+
+    /* Default value main pin */
+    inputAddress.value = DEFAULT_VALUE_MAIN_PIN;
+    window.mainPin.mapPinMain.style.left = DefaultPositionMainPin.x + 'px';
+    window.mainPin.mapPinMain.style.top = DefaultPositionMainPin.y + 'px';
+
+
+    // Remove pins
+    window.cards.removePins();
+    // Remove cards
+    var firstCardOfMap = document.querySelector('.map__card');
+    if (firstCardOfMap !== null) {
+      firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+    }
+
+    clearMapOfSuccessSendDataToServer();
+    document.addEventListener('keydown', onKeyPressCloseMessage);
+    document.addEventListener('click', onClickCloseMessage);
+    evt.preventDefault();
+  });
+
+  var checkedFieldFeaturesDisabled = function (fields) {
+    fields.forEach(function (field) {
+      if (field.checked) {
+        field.checked = false;
+      }
+      return field;
+    });
   };
 
   /* The function of adding the attribute Disabled*/
