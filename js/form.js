@@ -111,6 +111,20 @@
   var messageSuccessfulDataToServer = function () {
     blockMessage = templateSuccessMessage.cloneNode(true);
     form.appendChild(blockMessage);
+    clearMapOfSuccessSendDataToServer();
+
+    /* Default value main pin */
+    inputAddress.value = DEFAULT_VALUE_MAIN_PIN;
+    window.mainPin.mapPinMain.style.left = DefaultPositionMainPin.x + 'px';
+    window.mainPin.mapPinMain.style.top = DefaultPositionMainPin.y + 'px';
+
+    // Remove pins
+    window.cards.removePins();
+    // Remove cards
+    var firstCardOfMap = document.querySelector('.map__card');
+    if (firstCardOfMap !== null) {
+      firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+    }
   };
 
   var messageErrorDataToServer = function () {
@@ -129,21 +143,6 @@
     var formData = new FormData(form);
     window.backend.uploadDataToServer(formData, messageSuccessfulDataToServer, messageErrorDataToServer);
 
-    /* Default value main pin */
-    inputAddress.value = DEFAULT_VALUE_MAIN_PIN;
-    window.mainPin.mapPinMain.style.left = DefaultPositionMainPin.x + 'px';
-    window.mainPin.mapPinMain.style.top = DefaultPositionMainPin.y + 'px';
-
-
-    // Remove pins
-    window.cards.removePins();
-    // Remove cards
-    var firstCardOfMap = document.querySelector('.map__card');
-    if (firstCardOfMap !== null) {
-      firstCardOfMap.parentNode.removeChild(firstCardOfMap);
-    }
-
-    clearMapOfSuccessSendDataToServer();
     document.addEventListener('keydown', onKeyPressCloseMessage);
     document.addEventListener('click', onClickCloseMessage);
     evt.preventDefault();
