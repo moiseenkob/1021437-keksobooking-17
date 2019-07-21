@@ -76,7 +76,6 @@
 
     setPhotosCard(item.offer.photos, photosCardsItems);
     setFeatureCard(item.offer.features, featuresCardsItems);
-
     mapPins.insertBefore(cardElements, allPinsAdt.nextSibling);
   };
 

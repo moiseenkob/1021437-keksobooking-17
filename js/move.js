@@ -57,7 +57,7 @@
 
       if (!flagRenderPins) {
         window.cards.removePins();
-        window.backend(window.filter, window.error.createModalErrorInfo);
+        window.backend.getDataFromServer(window.filter, window.error.createModalErrorInfo);
       }
       flagRenderPins = true;
 
