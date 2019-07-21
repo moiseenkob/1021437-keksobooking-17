@@ -3,21 +3,18 @@
 (function () {
 
   var TIME_DELAY = 1000;
+  var URL = 'https://js.dump.academy/keksobooking';
   var StatusCode = {
     SUCCESSFUL: 200,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
     NOT_FOUND: 404,
   };
-  var URL_ACCEPT_DATA_FROM_SERVER = 'https://js.dump.academy/keksobooking/data';
-  var URL_SEND_DATA_TO_SERVER = 'https://js.dump.academy/keksobooking';
-  var xhrNew;
 
   var createNewXhrApi = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
-    xhrNew = xhr;
     xhr.addEventListener('load', function () {
 
       switch (xhr.status) {
@@ -47,23 +44,24 @@
       onError('The request did not have time to complete ' + xhr.timeout + 'ms');
     });
 
-    xhrNew.timeout = TIME_DELAY;
+    xhr.timeout = TIME_DELAY;
+    return xhr;
   };
 
   var getDataFromServer = function (onSuccess, onError) {
 
-    createNewXhrApi(onSuccess, onError);
-    xhrNew.open('GET', URL_ACCEPT_DATA_FROM_SERVER);
-    xhrNew.send();
+    var xhr = createNewXhrApi(onSuccess, onError);
+    xhr.open('GET', URL + '/data');
+    xhr.send();
 
   };
 
 
   var uploadDataToServer = function (data, onSuccess, onError) {
 
-    createNewXhrApi(onSuccess, onError);
-    xhrNew.open('POST', URL_SEND_DATA_TO_SERVER);
-    xhrNew.send(data);
+    var xhr = createNewXhrApi(onSuccess, onError);
+    xhr.open('POST', URL);
+    xhr.send(data);
 
   };
 
