@@ -3,17 +3,16 @@
 (function () {
 
   var COUNT_HOUSE_OF_MAP = 5;
-  var typeHouseFromFilter = document.querySelector('#housing-type');
-  var typePriceFromFilter = document.querySelector('#housing-price');
-  var countRoomsFromFilter = document.querySelector('#housing-rooms');
-  var countGuestsFromFilter = document.querySelector('#housing-guests');
+  var formFilter = document.querySelector('.map__filters');
   var newArrayAllItemsFromServer = [];
   var valueFilters = {
-    'typeHouse': 'any',
-    'price': 'any',
-    'rooms': 'any',
-    'guests': 'any'
+    'housing-type': 'any',
+    'housing-price': 'any',
+    'housing-rooms': 'any',
+    'housing-guests': 'any',
+    'features': []
   };
+
   var DictionaryPrice = {
     'middle': [10000, 50000],
     'low': [10000],
@@ -30,69 +29,66 @@
     var housingTypeFilter;
 
     for (var key in dict) {
+
       if (dict[key] !== 'any') {
 
         housingTypeFilter = newArrayAllItemsFromServer.filter(function (houseItems) {
-          if (dict['typeHouse'] !== 'any') {
-            return houseItems['offer']['type'] === dict['typeHouse'];
-          } else {
-            return houseItems;
+          if (dict['housing-type'] !== 'any') {
+            return houseItems['offer']['type'] === dict['housing-type'];
           }
+          return true;
         }).
         filter(function (houseItems) {
-          switch (dict['price']) {
+          switch (dict['housing-price']) {
             case 'high':
-              return houseItems['offer']['price'] > DictionaryPrice[dict['price']];
+              return houseItems['offer']['price'] > DictionaryPrice[dict['housing-price']];
             case 'middle':
-              return houseItems['offer']['price'] > DictionaryPrice[dict['price']][0] && houseItems['offer']['price'] < DictionaryPrice[dict['price']][1];
+              return houseItems['offer']['price'] > DictionaryPrice[dict['housing-price']][0] && houseItems['offer']['price'] < DictionaryPrice[dict['housing-price']][1];
             case 'low':
-              return houseItems['offer']['price'] < DictionaryPrice[dict['price']];
+              return houseItems['offer']['price'] < DictionaryPrice[dict['housing-price']];
             default:
-              return houseItems;
+              return true;
           }
         }).
         filter(function (houseItems) {
-          if (dict['rooms'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['rooms'], 10);
-          } else {
-            return houseItems;
+          if (dict['housing-rooms'] !== 'any') {
+            return houseItems['offer']['rooms'] === parseInt(dict['housing-rooms'], 10);
           }
+          return true;
         }).
         filter(function (houseItems) {
-          if (dict['guests'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['guests'], 10);
-          } else {
-            return houseItems;
+          if (dict['housing-guests'] !== 'any') {
+            return houseItems['offer']['rooms'] === parseInt(dict['housing-guests'], 10);
           }
+          return true;
         });
-      } else {
-        var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
-        window.cards.removePins();
-        window.cards.renderPins(newArrayFilterCountItems);
+        // .
+        // filter(function (houseItems) {
+        //   if (dict['features'] !== '') {
+        //     console.log(dict['features'])
+        //     return houseItems['offer']['features'][0] === dict['features'];
+        //   }
+        //   return true;
+        // });
       }
     }
-    newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
+    var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
     window.cards.removePins();
     window.cards.renderPins(newArrayFilterCountItems);
 
   };
 
-
-  typeHouseFromFilter.addEventListener('change', function (evt) {
-    valueFilters['typeHouse'] = evt.target.value;
-    filterAndRenderPin(valueFilters);
-  });
-  typePriceFromFilter.addEventListener('change', function (evt) {
-    valueFilters['price'] = evt.target.value;
-    filterAndRenderPin(valueFilters);
-  });
-  countRoomsFromFilter.addEventListener('change', function (evt) {
-    valueFilters['rooms'] = evt.target.value;
-    filterAndRenderPin(valueFilters);
-  });
-  countGuestsFromFilter.addEventListener('change', function (evt) {
-    valueFilters['guests'] = evt.target.value;
-    filterAndRenderPin(valueFilters);
+  formFilter.addEventListener('change', function (evt) {
+    for (var key in valueFilters) {
+      if (evt.target.name === key) {
+        if (evt.target.name === 'features') {
+          valueFilters['features'].push(evt.target.value);
+          console.log(valueFilters[evt.target.name]);
+        }
+        valueFilters[evt.target.name] = evt.target.value;
+        filterAndRenderPin(valueFilters);
+      }
+    }
   });
 
   window.filter = createObjectFilterCountItems;
