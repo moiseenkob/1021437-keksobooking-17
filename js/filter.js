@@ -10,7 +10,8 @@
     'housing-price': 'any',
     'housing-rooms': 'any',
     'housing-guests': 'any',
-    'features': []
+    'features-wifi': '',
+    'features-dishwasher': '',
   };
 
   var DictionaryPrice = {
@@ -61,15 +62,16 @@
             return houseItems['offer']['rooms'] === parseInt(dict['housing-guests'], 10);
           }
           return true;
+        }).
+        filter(function (houseItems) {
+          if (dict['features-wifi'] !== '') {
+            return houseItems['offer']['features'][0] === dict['features-wifi'];
+          }
+          if (dict['features-dishwasher'] !== '') {
+            return houseItems['offer']['features'][1] === dict['features-dishwasher'];
+          }
+          return true;
         });
-        // .
-        // filter(function (houseItems) {
-        //   if (dict['features'] !== '') {
-        //     console.log(dict['features'])
-        //     return houseItems['offer']['features'][0] === dict['features'];
-        //   }
-        //   return true;
-        // });
       }
     }
     var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
@@ -80,10 +82,10 @@
 
   formFilter.addEventListener('change', function (evt) {
     for (var key in valueFilters) {
-      if (evt.target.name === key) {
+      if (evt.target.name === key || evt.target.name + '-' + evt.target.value === key) {
         if (evt.target.name === 'features') {
-          valueFilters['features'].push(evt.target.value);
-          console.log(valueFilters[evt.target.name]);
+          valueFilters['features' + '-' + evt.target.value] = evt.target.value;
+          filterAndRenderPin(valueFilters);
         }
         valueFilters[evt.target.name] = evt.target.value;
         filterAndRenderPin(valueFilters);
