@@ -12,6 +12,10 @@
     'housing-guests': 'any',
     'features-wifi': '',
     'features-dishwasher': '',
+    'features-parking': '',
+    'features-washer': '',
+    'features-elevator': '',
+    'features-conditioner': ''
   };
 
   var DictionaryPrice = {
@@ -64,14 +68,23 @@
           return true;
         }).
         filter(function (houseItems) {
-          if (dict['features-wifi'] !== '') {
-            return houseItems['offer']['features'][0] === dict['features-wifi'];
-          }
-          if (dict['features-dishwasher'] !== '') {
-            return houseItems['offer']['features'][1] === dict['features-dishwasher'];
-          }
-          return true;
+          var newItemFilterFeatures;
+          houseItems['offer']['features'].forEach(function (item) {
+
+            switch (item) {
+              case dict['features' + '-' + item]:
+                newItemFilterFeatures = item === dict['features' + '-' + item];
+                return newItemFilterFeatures;
+              default:
+                return houseItems;
+            }
+          });
+
+          return newItemFilterFeatures;
+
+
         });
+
       }
     }
     var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
