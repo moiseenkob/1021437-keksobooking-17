@@ -3,19 +3,19 @@
 (function () {
 
   var COUNT_HOUSE_OF_MAP = 5;
-  var formFilter = document.querySelector('.map__filters');
+  var mapPinsFilter = document.querySelector('.map__filters');
   var newArrayAllItemsFromServer = [];
   var valueFilters = {
     'housing-type': 'any',
     'housing-price': 'any',
     'housing-rooms': 'any',
     'housing-guests': 'any',
-    'features-wifi': '',
-    'features-dishwasher': '',
-    'features-parking': '',
-    'features-washer': '',
-    'features-elevator': '',
-    'features-conditioner': ''
+    'wifi': 'false',
+    'dishwasher': 'false',
+    'parking': 'false',
+    'washer': 'false',
+    'elevator': 'false',
+    'conditioner': 'false'
   };
 
   var DictionaryPrice = {
@@ -68,22 +68,23 @@
           return true;
         }).
         filter(function (houseItems) {
-          var newItemFilterFeatures;
-          houseItems['offer']['features'].forEach(function (item) {
+          var visibleFeatures = selectedFeatures(valueFilters);
 
-            switch (item) {
-              case dict['features' + '-' + item]:
-                newItemFilterFeatures = item === dict['features' + '-' + item];
-                return newItemFilterFeatures;
-              default:
-                return houseItems;
+          var i = 0;
+          while (i < 6) {
+
+            if (houseItems['offer']['features'].toString().indexOf(visibleFeatures.toString()) !== -1) {
+
+              return true;
+            } else {
+              break;
             }
-          });
 
-          return newItemFilterFeatures;
+          }
 
-
+          return false;
         });
+
 
       }
     }
@@ -93,18 +94,24 @@
 
   };
 
-  formFilter.addEventListener('change', function (evt) {
-    for (var key in valueFilters) {
-      if (evt.target.name === key || evt.target.name + '-' + evt.target.value === key) {
-        if (evt.target.name === 'features') {
-          valueFilters['features' + '-' + evt.target.value] = evt.target.value;
-          filterAndRenderPin(valueFilters);
-        }
-        valueFilters[evt.target.name] = evt.target.value;
-        filterAndRenderPin(valueFilters);
+  var selectedFeatures = function (features) {
+    var listFeatures = [];
+    for (var key in features) {
+      if (features[key] === true) {
+        listFeatures.push(key);
       }
     }
-  });
+    return listFeatures;
+  };
+
+  var onFormFilterClick = function (evt) {
+    var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(7);
+    var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
+    valueFilters[key] = value;
+    filterAndRenderPin(valueFilters);
+  };
+
+  mapPinsFilter.addEventListener('change', onFormFilterClick);
 
   window.filter = createObjectFilterCountItems;
 
