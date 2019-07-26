@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-
+  var DEBOUNCE_INTERVAL = 500;
   var COUNT_HOUSE_OF_MAP = 5;
   var mapPinsFilter = document.querySelector('.map__filters');
   var newArrayAllItemsFromServer = [];
@@ -17,12 +17,12 @@
     'elevator': 'false',
     'conditioner': 'false'
   };
-
   var DictionaryPrice = {
     'middle': [10000, 50000],
     'low': [10000],
     'high': [50000]
   };
+  var lastTimeout;
 
   /* Item count filter */
   var createObjectFilterCountItems = function (data) {
@@ -79,12 +79,24 @@
             } else {
               break;
             }
+          }
+          return false;
+        }).
+        filter(function (houseItems) {
+          var currentFeatures = selectedFeatures(valueFilters);
+          var houseItemsFeatures = houseItems['offer']['features'];
+          var result = true;
 
+          for (var i = 0; i < currentFeatures.length; i++) {
+            var item = currentFeatures[i];
+            if (houseItemsFeatures.indexOf(item) === -1) {
+              result = false;
+              break;
+            }
           }
 
-          return false;
+          return result;
         });
-
 
       }
     }
@@ -104,12 +116,20 @@
     return listFeatures;
   };
 
+
   var onFormFilterClick = function (evt) {
     var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(7);
     var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
     valueFilters[key] = value;
-    filterAndRenderPin(valueFilters);
+
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      filterAndRenderPin(valueFilters);
+    }, DEBOUNCE_INTERVAL);
   };
+
 
   mapPinsFilter.addEventListener('change', onFormFilterClick);
 

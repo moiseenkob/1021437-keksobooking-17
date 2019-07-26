@@ -47,6 +47,8 @@
   var textDescription = document.querySelector('#description');
   var blockMessage;
   var fieldFeatures = document.querySelectorAll('.features input');
+  var allViewScreen = document.querySelector('main');
+  var buttonReset = form.querySelector('.ad-form__reset');
 
 
   /* Disabled count guest else room > guest */
@@ -108,9 +110,7 @@
     checkedFieldFeaturesDisabled(fieldFeatures);
   };
 
-  var messageSuccessfulDataToServer = function () {
-    blockMessage = templateSuccessMessage.cloneNode(true);
-    form.appendChild(blockMessage);
+  var clearFieldAndPins = function () {
     clearMapOfSuccessSendDataToServer();
 
     /* Default value main pin */
@@ -127,9 +127,15 @@
     }
   };
 
+  var messageSuccessfulDataToServer = function () {
+    blockMessage = templateSuccessMessage.cloneNode(true);
+    allViewScreen.appendChild(blockMessage);
+    clearFieldAndPins();
+  };
+
   var messageErrorDataToServer = function () {
     blockMessage = templateErrorMessage.cloneNode(true);
-    form.appendChild(blockMessage);
+    allViewScreen.appendChild(blockMessage);
   };
 
   // Close card key ESC
@@ -194,6 +200,10 @@
     setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
     inputAddress.value = window.mainPin.getMainPinCoordinates('disabled');
   };
+
+  buttonReset.addEventListener('click', function () {
+    clearFieldAndPins();
+  });
 
   /* We listen to the event to indicate the price when choosing a type of housing */
   selectTypeHouse.addEventListener('change', onSelectTypeHouse);
