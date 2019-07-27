@@ -51,6 +51,31 @@
   var buttonReset = form.querySelector('.ad-form__reset');
 
 
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+  var fileChooser = document.querySelector('.ad-form__field input[type=file]');
+  var preview = document.querySelector('.ad-form-header__preview img');
+
+  fileChooser.addEventListener('change', function () {
+    var file = fileChooser.files[0];
+    var fileName = file.name.toLowerCase();
+
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+
+    if (matches) {
+      var reader = new FileReader();
+
+      reader.addEventListener('load', function () {
+        preview.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);
+    }
+  });
+
+
   /* Disabled count guest else room > guest */
   var setBorderValueCount = function (option, elements) {
     option.forEach(function (item) {
@@ -186,14 +211,9 @@
     for (var i = 0; i < adFormField.length; i++) {
       adFormField[i].removeAttribute('disabled');
     }
-    for (var y = 0; y < adMapFieldFilters.length; y++) {
-      adMapFieldFilters[y].removeAttribute('disabled');
-    }
-    for (var j = 0; j < adMapFieldFiltersFeatures.length; j++) {
-      adMapFieldFiltersFeatures[j].removeAttribute('disabled');
-    }
     adFormMain.classList.remove('ad-form--disabled');
   };
+
 
   /* Reset function */
   var setDefaultValues = function () {

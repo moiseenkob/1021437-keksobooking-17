@@ -116,8 +116,17 @@
     return listFeatures;
   };
 
+  var removeCardActivePin = function () {
+    var cardPinActive = document.querySelector('.map__card');
+    if (cardPinActive !== null) {
+      cardPinActive.remove();
+    }
+  };
+
 
   var onFormFilterClick = function (evt) {
+
+    removeCardActivePin();
     var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(7);
     var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
     valueFilters[key] = value;

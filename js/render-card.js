@@ -35,6 +35,13 @@
     }
   };
 
+  var removeActivePin = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin !== null) {
+      activePin.classList.remove('map__pin--active');
+    }
+  };
+
   var renderCard = function (item) {
     var cardElements = templateCard.cloneNode(true);
 
@@ -54,11 +61,13 @@
     var buttonCardClose = cardElements.querySelector('.popup__close');
     buttonCardClose.addEventListener('click', function () {
       cardElements.remove();
+      removeActivePin();
     });
 
     var onKeyPress = function (evt) {
       if (evt.keyCode === ESC_KEYCODE) {
         cardElements.remove();
+        removeActivePin();
       }
     };
     // Close card key ESC
@@ -79,6 +88,9 @@
     mapPins.insertBefore(cardElements, allPinsAdt.nextSibling);
   };
 
-  window.renderCard = renderCard;
+  window.renderCard = {
+    renderCard: renderCard,
+    removeActivePin: removeActivePin
+  };
 
 })();

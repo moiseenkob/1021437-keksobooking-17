@@ -23,6 +23,7 @@
 
   mapPinMain.addEventListener('mousedown', window.move.OnMouseDragAndDropMove);
 
+
   window.mainPin = {
     mapPinMain: mapPinMain,
     getMainPinCoordinates: getMainPinCoordinates

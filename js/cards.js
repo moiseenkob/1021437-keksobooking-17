@@ -7,6 +7,8 @@
   var PIN_HEIGHT = 70;
   var globalMap = document.querySelector('.map__pins');
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+  var adMapFieldFilters = document.querySelectorAll('select');
+  var adMapFieldFiltersFeatures = document.querySelectorAll('fieldset');
 
   /* Function remove items */
   var removePins = function () {
@@ -28,29 +30,43 @@
       /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);
 
-      /* Changing data */
-      var imageItem = houseElements.querySelector('img');
-      imageItem.src = item['author']['avatar'];
-      imageItem.alt = item['offer']['title'];
-      houseElements.style.left = item['location']['x'] + (PIN_WIDTH / 2) + 'px';
-      houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
-      // Render card
-      houseElements.addEventListener('click', function () {
-        var firstCardOfMap = document.querySelector('.map__card');
-        if (firstCardOfMap !== null) {
-          firstCardOfMap.parentNode.removeChild(firstCardOfMap);
-          window.renderCard(item);
-        } else {
-          window.renderCard(item);
-        }
-      });
+      if (item['offer'] === undefined) {
+        item.remove();
+      } else {
+        /* Changing data */
+        var imageItem = houseElements.querySelector('img');
+        imageItem.src = item['author']['avatar'];
+        imageItem.alt = item['offer']['title'];
+        houseElements.style.left = item['location']['x'] + (PIN_WIDTH / 2) + 'px';
+        houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
+        // Render card
+        houseElements.addEventListener('click', function () {
 
-      /* Insert objects into the fragment */
-      fragment.appendChild(houseElements);
+          var firstCardOfMap = document.querySelector('.map__card');
+          if (firstCardOfMap !== null) {
+            firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+            window.renderCard.renderCard(item);
+            window.renderCard.removeActivePin();
+            houseElements.classList.add('map__pin--active');
+          } else {
+            window.renderCard.renderCard(item);
+            houseElements.classList.add('map__pin--active');
+          }
+        });
 
-      globalMap.appendChild(fragment);
+        /* Insert objects into the fragment */
+        fragment.appendChild(houseElements);
+
+        globalMap.appendChild(fragment);
+      }
 
     });
+    for (var y = 0; y < adMapFieldFilters.length; y++) {
+      adMapFieldFilters[y].removeAttribute('disabled');
+    }
+    for (var j = 0; j < adMapFieldFiltersFeatures.length; j++) {
+      adMapFieldFiltersFeatures[j].removeAttribute('disabled');
+    }
     return fragment;
   };
 
