@@ -5,10 +5,8 @@
 
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var globalMap = document.querySelector('.map__pins');
+  var pinsArea = document.querySelector('.map__pins');
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
-  var adMapFieldFilters = document.querySelectorAll('select');
-  var adMapFieldFiltersFeatures = document.querySelectorAll('fieldset');
 
   /* Function remove items */
   var removePins = function () {
@@ -21,24 +19,22 @@
   };
 
   var renderPins = function (pin) {
-
     var fragment = document.createDocumentFragment();
-
     /* Insert data from our function */
     pin.forEach(function (item) {
 
       /* We clone data from a template */
       var houseElements = visibleHouseMap.cloneNode(true);
 
-      if (item['offer'] === undefined) {
-        item.remove();
-      } else {
+      if (item['offer'] !== undefined) {
         /* Changing data */
         var imageItem = houseElements.querySelector('img');
         imageItem.src = item['author']['avatar'];
         imageItem.alt = item['offer']['title'];
-        houseElements.style.left = item['location']['x'] + (PIN_WIDTH / 2) + 'px';
+
+        houseElements.style.left = item['location']['x'] - (PIN_WIDTH / 2) + 'px';
         houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
+
         // Render card
         houseElements.addEventListener('click', function () {
 
@@ -57,22 +53,18 @@
         /* Insert objects into the fragment */
         fragment.appendChild(houseElements);
 
-        globalMap.appendChild(fragment);
+        pinsArea.appendChild(fragment);
       }
 
     });
-    for (var y = 0; y < adMapFieldFilters.length; y++) {
-      adMapFieldFilters[y].removeAttribute('disabled');
-    }
-    for (var j = 0; j < adMapFieldFiltersFeatures.length; j++) {
-      adMapFieldFiltersFeatures[j].removeAttribute('disabled');
-    }
+
     return fragment;
   };
 
-  window.cards = {
+  window.handlerPins = {
     removePins: removePins,
-    renderPins: renderPins
+    renderPins: renderPins,
+    pinsArea: pinsArea
   };
 
 })();

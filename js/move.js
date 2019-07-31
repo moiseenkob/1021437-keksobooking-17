@@ -6,7 +6,7 @@
   var MAP_MAX_WIDTH = 1135;
   var Y_MAP_MIN = 130;
   var Y_MAP_MAX = 630;
-  var flagRenderPins = false;
+
 
   var OnMouseDragAndDropMove = function (evt) {
 
@@ -28,9 +28,6 @@
         y: moveEvt.clientY
       };
 
-      window.form.activeForm();
-      window.map();
-
       /* Height and width */
       var coordinateYPoint = window.mainPin.mapPinMain.offsetTop - shift.y;
       var coordinateXPoint = window.mainPin.mapPinMain.offsetLeft - shift.x;
@@ -40,9 +37,6 @@
       window.mainPin.mapPinMain.style.top = isInvalidedTop ? window.mainPin.mapPinMain.style.top + 'px' : coordinateYPoint + 'px';
       window.mainPin.mapPinMain.style.left = isInvalidedLeft ? window.mainPin.mapPinMain.style.left + 'px' : coordinateXPoint + 'px';
 
-      /* Write the data in the address field when the label is active */
-      window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
-
     };
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
@@ -50,16 +44,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
 
-      window.form.activeForm();
-      window.map();
-
-      window.form.inputAddress.value = window.mainPin.getMainPinCoordinates('active');
-
-      if (!flagRenderPins) {
-        window.cards.removePins();
-        window.backend.getDataFromServer(window.filter, window.error.createModalErrorInfo);
-      }
-      flagRenderPins = true;
+      window.mainPin.onMapPinMainClick();
 
       window.error.removeModalErrorInfo();
     };
@@ -69,9 +54,7 @@
 
   };
 
-  window.move = {
-    OnMouseDragAndDropMove: OnMouseDragAndDropMove
-  };
+  window.move = OnMouseDragAndDropMove;
 
 
 })();

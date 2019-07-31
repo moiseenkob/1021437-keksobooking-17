@@ -11,7 +11,7 @@
     NOT_FOUND: 404,
   };
 
-  var createNewXhrApi = function (onSuccess, onError) {
+  var handlerData = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -48,25 +48,21 @@
     return xhr;
   };
 
-  var getDataFromServer = function (onSuccess, onError) {
-
-    var xhr = createNewXhrApi(onSuccess, onError);
+  var loadDataFromServer = function (onSuccess, onError) {
+    var xhr = handlerData(onSuccess, onError);
     xhr.open('GET', URL + '/data');
     xhr.send();
-
   };
 
 
   var uploadDataToServer = function (data, onSuccess, onError) {
-
-    var xhr = createNewXhrApi(onSuccess, onError);
+    var xhr = handlerData(onSuccess, onError);
     xhr.open('POST', URL);
     xhr.send(data);
-
   };
 
   window.backend = {
-    getDataFromServer: getDataFromServer,
+    loadDataFromServer: loadDataFromServer,
     uploadDataToServer: uploadDataToServer
   };
 

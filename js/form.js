@@ -2,11 +2,11 @@
 
 (function () {
 
-
   var MAX_ROOM = 100;
   var MIN_GUEST = 0;
   var ESC_KEYCODE = 27;
-  var DEFAULT_VALUE_MAIN_PIN = '603, 449';
+  var NUMBER_SYSTEM = 10;
+  var STOCK_VALUE_MAIN_PIN = '603, 440';
   var DefaultPositionMainPin = {
     x: 570,
     y: 375
@@ -25,55 +25,30 @@
   };
   var selectDateTimeIn = document.querySelector('#timein');
   var selectDateTimeOut = document.querySelector('#timeout');
-  var setTimeForm = document.querySelector('.ad-form__element--time');
   var selectTypeHouse = document.querySelector('#type');
   var setMinPriceField = document.querySelector('#price');
-  var adMapFilters = document.querySelector('.map__filters');
-  var adMapFieldFilters = adMapFilters.querySelectorAll('select');
-  var adMapFieldFiltersFeatures = adMapFilters.querySelectorAll('fieldset');
-  var adFormField = document.querySelectorAll('.ad-form fieldset');
-  var inputAddress = document.querySelector('input[name="address"]');
-  var adFormMain = document.querySelector('.ad-form');
   var roomCounter = document.querySelector('#room_number');
   var guestValue = document.querySelectorAll('#capacity option');
   var selectGuestField = document.querySelector('#capacity');
-  var dataRoom = [];
-  var roomCountValue = '1';
-  var guestCountValue = '3';
-  var form = document.querySelector('.ad-form');
-  var templateSuccessMessage = document.querySelector('#success').content.querySelector('.success');
-  var templateErrorMessage = document.querySelector('#error').content.querySelector('.error');
-  var inputTitle = document.querySelector('#title');
+  var titleAd = document.querySelector('#title');
   var textDescription = document.querySelector('#description');
-  var blockMessage;
+  var wrapperFilters = document.querySelector('.map__filters');
+  var allComfort = wrapperFilters.querySelectorAll('fieldset');
+  var allSelectFromFilters = wrapperFilters.querySelectorAll('select');
+  var setTimeForm = document.querySelector('.ad-form__element--time');
+  var allFieldFromForm = document.querySelectorAll('.ad-form fieldset');
+  var fieldAddress = document.querySelector('input[name="address"]');
+  var formMain = document.querySelector('.ad-form');
   var fieldFeatures = document.querySelectorAll('.features input');
   var allViewScreen = document.querySelector('main');
-  var buttonReset = form.querySelector('.ad-form__reset');
-
-
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-
-  var fileChooser = document.querySelector('.ad-form__field input[type=file]');
-  var preview = document.querySelector('.ad-form-header__preview img');
-
-  fileChooser.addEventListener('change', function () {
-    var file = fileChooser.files[0];
-    var fileName = file.name.toLowerCase();
-
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
-
-    if (matches) {
-      var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        preview.src = reader.result;
-      });
-
-      reader.readAsDataURL(file);
-    }
-  });
+  var buttonReset = formMain.querySelector('.ad-form__reset');
+  var map = document.querySelector('.map');
+  var templateSuccessMessage = document.querySelector('#success').content.querySelector('.success');
+  var templateErrorMessage = document.querySelector('#error').content.querySelector('.error');
+  var dataRooms = [];
+  var roomCountStock = '1';
+  var guestCountStock = '3';
+  var blockMessage;
 
 
   /* Disabled count guest else room > guest */
@@ -84,15 +59,15 @@
   };
 
   var onSelectChangeRoomCount = function (evt) {
-    roomCountValue = evt.target.value;
-    dataRoom = DictionaryValueCountRooms[evt.target.value];
-    setBorderValueCount(guestValue, dataRoom);
-    onSelectGuestCountValidation(roomCountValue, guestCountValue);
+    roomCountStock = evt.target.value;
+    dataRooms = DictionaryValueCountRooms[evt.target.value];
+    setBorderValueCount(guestValue, dataRooms);
+    onSelectGuestCountValidation(roomCountStock, guestCountStock);
   };
 
   var onSelectChangeGuestCount = function (evt) {
-    guestCountValue = evt.target.value;
-    onSelectGuestCountValidation(roomCountValue, guestCountValue);
+    guestCountStock = evt.target.value;
+    onSelectGuestCountValidation(roomCountStock, guestCountStock);
   };
 
   /* Select Room */
@@ -103,8 +78,8 @@
 
   var onSelectGuestCountValidation = function (countRoom, countGuest) {
 
-    var room = parseInt(countRoom, 10);
-    var guest = parseInt(countGuest, 10);
+    var room = parseInt(countRoom, NUMBER_SYSTEM);
+    var guest = parseInt(countGuest, NUMBER_SYSTEM);
     if (room < guest) {
       selectGuestField.setCustomValidity('Change the number of guests');
     } else if ((room < MAX_ROOM && guest === MIN_GUEST) || (room === MAX_ROOM && guest > MIN_GUEST)) {
@@ -113,38 +88,44 @@
       selectGuestField.setCustomValidity('');
       selectGuestField.style.background = 'white';
     }
-
   };
 
   // Default value count room and guest
   var setDefaultValueCountGuest = function () {
     selectGuestField.value = '1';
-    guestCountValue = '1';
-    onSelectGuestCountValidation(roomCountValue, guestCountValue);
+    guestCountStock = '1';
+    onSelectGuestCountValidation(roomCountStock, guestCountStock);
   };
   setDefaultValueCountGuest();
 
-  var onClickCloseMessage = function () {
+  var onMessageClick = function () {
     blockMessage.remove();
   };
 
   var clearMapOfSuccessSendDataToServer = function () {
-    inputTitle.value = '';
+    titleAd.value = '';
     setMinPriceField.value = '';
     textDescription.value = '';
+    window.loadPhotos.avatarPreview.src = window.loadPhotos.SRC_AVATAR;
+    formMain.classList.add('ad-form--disabled');
+    wrapperFilters.classList.add('ad-form--disabled');
+    map.classList.add('map--faded');
+    addAttributeFieldsDisabled(allSelectFromFilters);
+    addAttributeFieldsDisabled(allFieldFromForm);
+    addAttributeFieldsDisabled(allComfort);
     checkedFieldFeaturesDisabled(fieldFeatures);
+    window.loadPhotos.resetPhotos();
+    window.mainPin.mapPinMain.addEventListener('click', window.mainPin.onMapPinMainClick);
   };
 
   var clearFieldAndPins = function () {
     clearMapOfSuccessSendDataToServer();
-
     /* Default value main pin */
-    inputAddress.value = DEFAULT_VALUE_MAIN_PIN;
+    fieldAddress.value = STOCK_VALUE_MAIN_PIN;
     window.mainPin.mapPinMain.style.left = DefaultPositionMainPin.x + 'px';
     window.mainPin.mapPinMain.style.top = DefaultPositionMainPin.y + 'px';
-
     // Remove pins
-    window.cards.removePins();
+    window.handlerPins.removePins();
     // Remove cards
     var firstCardOfMap = document.querySelector('.map__card');
     if (firstCardOfMap !== null) {
@@ -158,24 +139,27 @@
     clearFieldAndPins();
   };
 
+  var activeMap = function () {
+    map.classList.remove('map--faded');
+  };
+
   var messageErrorDataToServer = function () {
     blockMessage = templateErrorMessage.cloneNode(true);
     allViewScreen.appendChild(blockMessage);
   };
 
   // Close card key ESC
-  var onKeyPressCloseMessage = function (evt) {
+  var onMessageKeyPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       blockMessage.remove();
     }
   };
 
-  form.addEventListener('submit', function (evt) {
-    var formData = new FormData(form);
+  formMain.addEventListener('submit', function (evt) {
+    var formData = new FormData(formMain);
     window.backend.uploadDataToServer(formData, messageSuccessfulDataToServer, messageErrorDataToServer);
-
-    document.addEventListener('keydown', onKeyPressCloseMessage);
-    document.addEventListener('click', onClickCloseMessage);
+    document.addEventListener('keydown', onMessageKeyPress);
+    document.addEventListener('click', onMessageClick);
     evt.preventDefault();
   });
 
@@ -196,29 +180,29 @@
   };
 
   /* Calling Functions to Add Disabled Attributes */
-  addAttributeFieldsDisabled(adMapFieldFilters);
-  addAttributeFieldsDisabled(adFormField);
-  addAttributeFieldsDisabled(adMapFieldFiltersFeatures);
+  addAttributeFieldsDisabled(allSelectFromFilters);
+  addAttributeFieldsDisabled(allFieldFromForm);
+  addAttributeFieldsDisabled(allComfort);
 
   /* Replacing the price when changing the type of housing */
-  var onSelectTypeHouse = function (evt) {
+  var onTypeHouseChange = function (evt) {
     var value = evt.target.value;
     setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
     setMinPriceField.min = PRICE_ONE_NIGHT[value];
   };
 
   var activeForm = function () {
-    for (var i = 0; i < adFormField.length; i++) {
-      adFormField[i].removeAttribute('disabled');
+    for (var i = 0; i < allFieldFromForm.length; i++) {
+      allFieldFromForm[i].removeAttribute('disabled');
     }
-    adFormMain.classList.remove('ad-form--disabled');
+    formMain.classList.remove('ad-form--disabled');
   };
 
 
   /* Reset function */
   var setDefaultValues = function () {
     setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
-    inputAddress.value = window.mainPin.getMainPinCoordinates('disabled');
+    fieldAddress.value = window.mainPin.getMainPinCoordinates('disabled');
   };
 
   buttonReset.addEventListener('click', function () {
@@ -226,10 +210,10 @@
   });
 
   /* We listen to the event to indicate the price when choosing a type of housing */
-  selectTypeHouse.addEventListener('change', onSelectTypeHouse);
+  selectTypeHouse.addEventListener('change', onTypeHouseChange);
 
   /* Setting the time when choosing entry or exit */
-  var onSetTimeFormChange = function (evt) {
+  var onTimeSetFormChange = function (evt) {
     var target = evt.target;
     if (target.id === selectDateTimeIn.id) {
       selectDateTimeOut.options.selectedIndex = target.options.selectedIndex;
@@ -239,13 +223,17 @@
   };
 
   /* Listening event to indicate the time of settlement and departure */
-  setTimeForm.addEventListener('change', onSetTimeFormChange);
+  setTimeForm.addEventListener('change', onTimeSetFormChange);
 
   setDefaultValues();
 
   window.form = {
-    inputAddress: inputAddress,
-    activeForm: activeForm
+    fieldAddress: fieldAddress,
+    activeForm: activeForm,
+    activeMap: activeMap,
+    map: map,
+    ESC_KEYCODE: ESC_KEYCODE,
+    wrapperFilters: wrapperFilters
   };
 
 })();

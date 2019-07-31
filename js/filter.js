@@ -1,10 +1,14 @@
 'use strict';
 
 (function () {
+
   var DEBOUNCE_INTERVAL = 500;
-  var COUNT_HOUSE_OF_MAP = 5;
-  var mapPinsFilter = document.querySelector('.map__filters');
-  var newArrayAllItemsFromServer = [];
+  var COUNT_HOUSE = 5;
+  var NUMBER_SYSTEM = 10;
+  var NUMBER_OF_LETTERS = 7;
+  var fieldsFilters = document.querySelectorAll('select');
+  var fieldsFiltersFeatures = document.querySelectorAll('fieldset');
+  var dataPins = [];
   var valueFilters = {
     'housing-type': 'any',
     'housing-price': 'any',
@@ -25,19 +29,25 @@
   var lastTimeout;
 
   /* Item count filter */
-  var createObjectFilterCountItems = function (data) {
-    newArrayAllItemsFromServer = data;
-    window.cards.renderPins(data.slice(0, COUNT_HOUSE_OF_MAP));
+  var createVisiblePins = function (data) {
+    dataPins = data;
+    window.handlerPins.renderPins(data.slice(0, COUNT_HOUSE));
+
+    for (var i = 0; i < fieldsFilters.length; i++) {
+      fieldsFilters[i].removeAttribute('disabled');
+    }
+    for (var y = 0; y < fieldsFiltersFeatures.length; y++) {
+      fieldsFiltersFeatures[y].removeAttribute('disabled');
+    }
+    window.form.wrapperFilters.classList.remove('ad-form--disabled');
   };
 
-  var filterAndRenderPin = function (dict) {
+  var visiblePinsWithFilters = function (dict) {
     var housingTypeFilter;
 
     for (var key in dict) {
-
       if (dict[key] !== 'any') {
-
-        housingTypeFilter = newArrayAllItemsFromServer.filter(function (houseItems) {
+        housingTypeFilter = dataPins.filter(function (houseItems) {
           if (dict['housing-type'] !== 'any') {
             return houseItems['offer']['type'] === dict['housing-type'];
           }
@@ -57,30 +67,15 @@
         }).
         filter(function (houseItems) {
           if (dict['housing-rooms'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['housing-rooms'], 10);
+            return houseItems['offer']['rooms'] === parseInt(dict['housing-rooms'], NUMBER_SYSTEM);
           }
           return true;
         }).
         filter(function (houseItems) {
           if (dict['housing-guests'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['housing-guests'], 10);
+            return houseItems['offer']['rooms'] === parseInt(dict['housing-guests'], NUMBER_SYSTEM);
           }
           return true;
-        }).
-        filter(function (houseItems) {
-          var visibleFeatures = selectedFeatures(valueFilters);
-
-          var i = 0;
-          while (i < 6) {
-
-            if (houseItems['offer']['features'].toString().indexOf(visibleFeatures.toString()) !== -1) {
-
-              return true;
-            } else {
-              break;
-            }
-          }
-          return false;
         }).
         filter(function (houseItems) {
           var currentFeatures = selectedFeatures(valueFilters);
@@ -94,20 +89,19 @@
               break;
             }
           }
-
           return result;
         });
 
       }
     }
-    var newArrayFilterCountItems = housingTypeFilter.slice(0, COUNT_HOUSE_OF_MAP);
-    window.cards.removePins();
-    window.cards.renderPins(newArrayFilterCountItems);
-
+    var blockPins = housingTypeFilter.slice(0, COUNT_HOUSE);
+    window.handlerPins.removePins();
+    window.handlerPins.renderPins(blockPins);
   };
 
   var selectedFeatures = function (features) {
     var listFeatures = [];
+
     for (var key in features) {
       if (features[key] === true) {
         listFeatures.push(key);
@@ -127,21 +121,21 @@
   var onFormFilterClick = function (evt) {
 
     removeCardActivePin();
-    var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(7);
+    var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(NUMBER_OF_LETTERS);
     var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
     valueFilters[key] = value;
 
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
+
     lastTimeout = window.setTimeout(function () {
-      filterAndRenderPin(valueFilters);
+      visiblePinsWithFilters(valueFilters);
     }, DEBOUNCE_INTERVAL);
   };
 
+  window.form.wrapperFilters.addEventListener('change', onFormFilterClick);
 
-  mapPinsFilter.addEventListener('change', onFormFilterClick);
-
-  window.filter = createObjectFilterCountItems;
+  window.filter = createVisiblePins;
 
 })();
