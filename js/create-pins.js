@@ -6,10 +6,10 @@
   var COUNT_HOUSE = 5;
   var NUMBER_SYSTEM = 10;
   var NUMBER_OF_LETTERS = 7;
-  var fieldsFilters = document.querySelectorAll('select');
-  var fieldsFiltersFeatures = document.querySelectorAll('fieldset');
+  var fieldsFilters = document.querySelectorAll('.map__filters select');
+  var fieldsFiltersFeatures = document.querySelectorAll('.map__filters fieldset');
   var dataPins = [];
-  var valueFilters = {
+  var filters = {
     'housing-type': 'any',
     'housing-price': 'any',
     'housing-rooms': 'any',
@@ -21,7 +21,7 @@
     'elevator': 'false',
     'conditioner': 'false'
   };
-  var DictionaryPrice = {
+  var price = {
     'middle': [10000, 50000],
     'low': [10000],
     'high': [50000]
@@ -29,9 +29,9 @@
   var lastTimeout;
 
   /* Item count filter */
-  var createVisiblePins = function (data) {
+  var createPins = function (data) {
     dataPins = data;
-    window.handlerPins.renderPins(data.slice(0, COUNT_HOUSE));
+    window.pins.render(data.slice(0, COUNT_HOUSE));
 
     for (var i = 0; i < fieldsFilters.length; i++) {
       fieldsFilters[i].removeAttribute('disabled');
@@ -42,7 +42,7 @@
     window.form.wrapperFilters.classList.remove('ad-form--disabled');
   };
 
-  var visiblePinsWithFilters = function (dict) {
+  var getPinsWithFilters = function (dict) {
     var housingTypeFilter;
 
     for (var key in dict) {
@@ -56,11 +56,11 @@
         filter(function (houseItems) {
           switch (dict['housing-price']) {
             case 'high':
-              return houseItems['offer']['price'] > DictionaryPrice[dict['housing-price']];
+              return houseItems['offer']['price'] > price[dict['housing-price']];
             case 'middle':
-              return houseItems['offer']['price'] > DictionaryPrice[dict['housing-price']][0] && houseItems['offer']['price'] < DictionaryPrice[dict['housing-price']][1];
+              return houseItems['offer']['price'] > price[dict['housing-price']][0] && houseItems['offer']['price'] < price[dict['housing-price']][1];
             case 'low':
-              return houseItems['offer']['price'] < DictionaryPrice[dict['housing-price']];
+              return houseItems['offer']['price'] < price[dict['housing-price']];
             default:
               return true;
           }
@@ -78,7 +78,7 @@
           return true;
         }).
         filter(function (houseItems) {
-          var currentFeatures = selectedFeatures(valueFilters);
+          var currentFeatures = setFeatures(filters);
           var houseItemsFeatures = houseItems['offer']['features'];
           var result = true;
 
@@ -94,12 +94,18 @@
 
       }
     }
-    var blockPins = housingTypeFilter.slice(0, COUNT_HOUSE);
-    window.handlerPins.removePins();
-    window.handlerPins.renderPins(blockPins);
+    return housingTypeFilter;
   };
 
-  var selectedFeatures = function (features) {
+  var renderFiltersPins = function () {
+    var pins = getPinsWithFilters(filters);
+    var blockPins = pins.slice(0, COUNT_HOUSE);
+    window.pins.remove();
+    window.pins.render(blockPins);
+  };
+
+
+  var setFeatures = function (features) {
     var listFeatures = [];
 
     for (var key in features) {
@@ -107,35 +113,35 @@
         listFeatures.push(key);
       }
     }
+
     return listFeatures;
   };
 
-  var removeCardActivePin = function () {
+  var removeCard = function () {
     var cardPinActive = document.querySelector('.map__card');
     if (cardPinActive !== null) {
       cardPinActive.remove();
     }
   };
 
-
   var onFormFilterClick = function (evt) {
 
-    removeCardActivePin();
+    removeCard();
     var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(NUMBER_OF_LETTERS);
     var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
-    valueFilters[key] = value;
+    filters[key] = value;
 
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
 
     lastTimeout = window.setTimeout(function () {
-      visiblePinsWithFilters(valueFilters);
+      renderFiltersPins();
     }, DEBOUNCE_INTERVAL);
   };
 
   window.form.wrapperFilters.addEventListener('change', onFormFilterClick);
 
-  window.filter = createVisiblePins;
+  window.createPins = createPins;
 
 })();

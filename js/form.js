@@ -8,16 +8,16 @@
   var NUMBER_SYSTEM = 10;
   var STOCK_VALUE_MAIN_PIN = '603, 440';
   var DefaultPositionMainPin = {
-    x: 570,
-    y: 375
+    X: 570,
+    Y: 375
   };
-  var DictionaryValueCountRooms = {
+  var valueToCountRooms = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0']
   };
-  var PRICE_ONE_NIGHT = {
+  var typeHouseToPrice = {
     'bungalo': 0,
     'flat': 1000,
     'house': 5000,
@@ -52,31 +52,31 @@
 
 
   /* Disabled count guest else room > guest */
-  var setBorderValueCount = function (option, elements) {
+  var setBorderRoomCount = function (option, elements) {
     option.forEach(function (item) {
       item.disabled = elements.indexOf(item.value) === -1;
     });
   };
 
-  var onSelectChangeRoomCount = function (evt) {
+  var onSetChangeRoomCount = function (evt) {
     roomCountStock = evt.target.value;
-    dataRooms = DictionaryValueCountRooms[evt.target.value];
-    setBorderValueCount(guestValue, dataRooms);
-    onSelectGuestCountValidation(roomCountStock, guestCountStock);
+    dataRooms = valueToCountRooms[evt.target.value];
+    setBorderRoomCount(guestValue, dataRooms);
+    onSetGuestValidation(roomCountStock, guestCountStock);
   };
 
-  var onSelectChangeGuestCount = function (evt) {
+  var onSetChangeGuestCount = function (evt) {
     guestCountStock = evt.target.value;
-    onSelectGuestCountValidation(roomCountStock, guestCountStock);
+    onSetGuestValidation(roomCountStock, guestCountStock);
   };
 
   /* Select Room */
-  roomCounter.addEventListener('change', onSelectChangeRoomCount);
+  roomCounter.addEventListener('change', onSetChangeRoomCount);
 
   /* Select Guest */
-  selectGuestField.addEventListener('change', onSelectChangeGuestCount);
+  selectGuestField.addEventListener('change', onSetChangeGuestCount);
 
-  var onSelectGuestCountValidation = function (countRoom, countGuest) {
+  var onSetGuestValidation = function (countRoom, countGuest) {
 
     var room = parseInt(countRoom, NUMBER_SYSTEM);
     var guest = parseInt(countGuest, NUMBER_SYSTEM);
@@ -94,7 +94,7 @@
   var setDefaultValueCountGuest = function () {
     selectGuestField.value = '1';
     guestCountStock = '1';
-    onSelectGuestCountValidation(roomCountStock, guestCountStock);
+    onSetGuestValidation(roomCountStock, guestCountStock);
   };
   setDefaultValueCountGuest();
 
@@ -102,30 +102,30 @@
     blockMessage.remove();
   };
 
-  var clearMapOfSuccessSendDataToServer = function () {
+  var setDefaultValueFormAndArea = function () {
     titleAd.value = '';
     setMinPriceField.value = '';
     textDescription.value = '';
-    window.loadPhotos.avatarPreview.src = window.loadPhotos.SRC_AVATAR;
+    window.loadPhotos.setDefaultAvatar();
     formMain.classList.add('ad-form--disabled');
     wrapperFilters.classList.add('ad-form--disabled');
     map.classList.add('map--faded');
-    addAttributeFieldsDisabled(allSelectFromFilters);
-    addAttributeFieldsDisabled(allFieldFromForm);
-    addAttributeFieldsDisabled(allComfort);
-    checkedFieldFeaturesDisabled(fieldFeatures);
-    window.loadPhotos.resetPhotos();
-    window.mainPin.mapPinMain.addEventListener('click', window.mainPin.onMapPinMainClick);
+    addAttributeDisabled(allSelectFromFilters);
+    addAttributeDisabled(allFieldFromForm);
+    addAttributeDisabled(allComfort);
+    setFeaturesDisabled(fieldFeatures);
+    window.loadPhotos.reset();
+    window.initial.pinBase.addEventListener('click', window.initial.onPinMainClick);
   };
 
   var clearFieldAndPins = function () {
-    clearMapOfSuccessSendDataToServer();
+    setDefaultValueFormAndArea();
     /* Default value main pin */
     fieldAddress.value = STOCK_VALUE_MAIN_PIN;
-    window.mainPin.mapPinMain.style.left = DefaultPositionMainPin.x + 'px';
-    window.mainPin.mapPinMain.style.top = DefaultPositionMainPin.y + 'px';
+    window.initial.pinBase.style.left = DefaultPositionMainPin.X + 'px';
+    window.initial.pinBase.style.top = DefaultPositionMainPin.Y + 'px';
     // Remove pins
-    window.handlerPins.removePins();
+    window.pins.remove();
     // Remove cards
     var firstCardOfMap = document.querySelector('.map__card');
     if (firstCardOfMap !== null) {
@@ -133,17 +133,17 @@
     }
   };
 
-  var messageSuccessfulDataToServer = function () {
+  var getSuccessfulMessage = function () {
     blockMessage = templateSuccessMessage.cloneNode(true);
     allViewScreen.appendChild(blockMessage);
     clearFieldAndPins();
   };
 
-  var activeMap = function () {
+  var setActiveMap = function () {
     map.classList.remove('map--faded');
   };
 
-  var messageErrorDataToServer = function () {
+  var getErrorMessage = function () {
     blockMessage = templateErrorMessage.cloneNode(true);
     allViewScreen.appendChild(blockMessage);
   };
@@ -157,13 +157,13 @@
 
   formMain.addEventListener('submit', function (evt) {
     var formData = new FormData(formMain);
-    window.backend.uploadDataToServer(formData, messageSuccessfulDataToServer, messageErrorDataToServer);
+    window.backend.uploadDataToServer(formData, getSuccessfulMessage, getErrorMessage);
     document.addEventListener('keydown', onMessageKeyPress);
     document.addEventListener('click', onMessageClick);
     evt.preventDefault();
   });
 
-  var checkedFieldFeaturesDisabled = function (fields) {
+  var setFeaturesDisabled = function (fields) {
     fields.forEach(function (field) {
       if (field.checked) {
         field.checked = false;
@@ -173,25 +173,25 @@
   };
 
   /* The function of adding the attribute Disabled*/
-  var addAttributeFieldsDisabled = function (arr) {
+  var addAttributeDisabled = function (arr) {
     for (var i = 0; i < arr.length; i++) {
       arr[i].setAttribute('disabled', '');
     }
   };
 
   /* Calling Functions to Add Disabled Attributes */
-  addAttributeFieldsDisabled(allSelectFromFilters);
-  addAttributeFieldsDisabled(allFieldFromForm);
-  addAttributeFieldsDisabled(allComfort);
+  addAttributeDisabled(allSelectFromFilters);
+  addAttributeDisabled(allFieldFromForm);
+  addAttributeDisabled(allComfort);
 
   /* Replacing the price when changing the type of housing */
   var onTypeHouseChange = function (evt) {
     var value = evt.target.value;
-    setMinPriceField.placeholder = PRICE_ONE_NIGHT[value];
-    setMinPriceField.min = PRICE_ONE_NIGHT[value];
+    setMinPriceField.placeholder = typeHouseToPrice[value];
+    setMinPriceField.min = typeHouseToPrice[value];
   };
 
-  var activeForm = function () {
+  var setActiveField = function () {
     for (var i = 0; i < allFieldFromForm.length; i++) {
       allFieldFromForm[i].removeAttribute('disabled');
     }
@@ -201,8 +201,8 @@
 
   /* Reset function */
   var setDefaultValues = function () {
-    setMinPriceField.placeholder = PRICE_ONE_NIGHT['flat'];
-    fieldAddress.value = window.mainPin.getMainPinCoordinates('disabled');
+    setMinPriceField.placeholder = typeHouseToPrice['flat'];
+    fieldAddress.value = window.initial.getBaseCoordinates('disabled');
   };
 
   buttonReset.addEventListener('click', function () {
@@ -229,8 +229,8 @@
 
   window.form = {
     fieldAddress: fieldAddress,
-    activeForm: activeForm,
-    activeMap: activeMap,
+    setActiveField: setActiveField,
+    setActiveMap: setActiveMap,
     map: map,
     ESC_KEYCODE: ESC_KEYCODE,
     wrapperFilters: wrapperFilters

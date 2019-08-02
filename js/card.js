@@ -3,11 +3,18 @@
 (function () {
 
   var templateCard = document.querySelector('#card').content.querySelector('.map__card');
-  var DictionaryHouse = {
+  var typesToValues = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
     'house': 'Дом',
     'palace': 'Дворец'
+  };
+
+  var removeActivePin = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin !== null) {
+      activePin.classList.remove('map__pin--active');
+    }
   };
 
   var setPhotosCard = function (items, element) {
@@ -19,9 +26,9 @@
 
       var fragment = document.createDocumentFragment();
       for (var i = 1; i < items.length; i++) {
-        var ImageElement = photoElement.cloneNode(true);
-        ImageElement.src = items[i];
-        fragment.appendChild(ImageElement);
+        var imageElement = photoElement.cloneNode(true);
+        imageElement.src = items[i];
+        fragment.appendChild(imageElement);
       }
       element.appendChild(fragment);
     }
@@ -38,14 +45,14 @@
     elements.appendChild(fragment);
   };
 
-  var removeActivePin = function () {
-    var activePin = document.querySelector('.map__pin--active');
-    if (activePin !== null) {
-      activePin.classList.remove('map__pin--active');
-    }
+  var closeCard = function (elements) {
+    elements.remove();
+    removeActivePin();
   };
 
-  var renderCard = function (item) {
+  var renderInfo = function (item) {
+
+    removeActivePin();
     var cardElements = templateCard.cloneNode(true);
 
     // Find elements cards
@@ -62,22 +69,23 @@
 
     // Close card
     var buttonCardClose = cardElements.querySelector('.popup__close');
-    buttonCardClose.addEventListener('click', function () {
-      cardElements.remove();
-      removeActivePin();
-    });
+    var onButtonCardClose = function () {
+      closeCard(cardElements);
+    };
 
-    var onKeyPress = function (evt) {
+    buttonCardClose.addEventListener('click', onButtonCardClose);
+
+    var onEscKeyPress = function (evt) {
       if (evt.keyCode === window.form.ESC_KEYCODE) {
-        cardElements.remove();
-        removeActivePin();
+        closeCard(cardElements);
       }
     };
+
     // Close card key ESC
-    document.addEventListener('keydown', onKeyPress);
+    document.addEventListener('keydown', onEscKeyPress);
 
     // Set value of card
-    var filingTheFieldsFromServer = function (fieldCard, fieldDataOfServer) {
+    var setFieldsWithData = function (fieldCard, fieldDataOfServer) {
       if (fieldDataOfServer !== '') {
         fieldCard.textContent = fieldDataOfServer;
       } else {
@@ -85,7 +93,7 @@
       }
     };
 
-    var filingTheAvatarFromServer = function (fieldCard, fieldDataOfServer) {
+    var setAvatarCard = function (fieldCard, fieldDataOfServer) {
       if (fieldDataOfServer !== '') {
         fieldCard.src = fieldDataOfServer;
       } else {
@@ -93,23 +101,20 @@
       }
     };
 
-    filingTheFieldsFromServer(titleCardsItems, item.offer.title);
-    filingTheFieldsFromServer(addressCardsItems, item.offer.address);
-    filingTheFieldsFromServer(priceCardsItems, item.offer.price + '₽/ночь.');
-    filingTheFieldsFromServer(typeCardsItems, DictionaryHouse[item.offer.type]);
-    filingTheFieldsFromServer(roomsAndGuestsCardsItems, item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей');
-    filingTheFieldsFromServer(timeBookingInAndOutCardsItems, 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout);
-    filingTheFieldsFromServer(descriptionCardsItems, item.offer.description);
-    filingTheFieldsFromServer(descriptionCardsItems, item.offer.description);
-    filingTheAvatarFromServer(avatarCardsItems, item.author.avatar);
+    setFieldsWithData(titleCardsItems, item.offer.title);
+    setFieldsWithData(addressCardsItems, item.offer.address);
+    setFieldsWithData(priceCardsItems, item.offer.price + '₽/ночь.');
+    setFieldsWithData(typeCardsItems, typesToValues[item.offer.type]);
+    setFieldsWithData(roomsAndGuestsCardsItems, item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей');
+    setFieldsWithData(timeBookingInAndOutCardsItems, 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout);
+    setFieldsWithData(descriptionCardsItems, item.offer.description);
+    setFieldsWithData(descriptionCardsItems, item.offer.description);
+    setAvatarCard(avatarCardsItems, item.author.avatar);
     setPhotosCard(item.offer.photos, photosCardsItems);
     setFeatureCard(item.offer.features, featuresCardsItems);
-    window.form.map.insertBefore(cardElements, window.handlerPins.pinsArea.nextSibling);
+    window.form.map.insertBefore(cardElements, window.pins.area.nextSibling);
   };
 
-  window.renderCard = {
-    renderCard: renderCard,
-    removeActivePin: removeActivePin
-  };
+  window.card = renderInfo;
 
 })();

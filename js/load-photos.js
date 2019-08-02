@@ -19,14 +19,18 @@
     });
   };
 
-  var resetPhotos = function () {
+  var setDefaultAvatar = function () {
+    avatarPreview.src = SRC_AVATAR;
+  };
+
+  var reset = function () {
     removePhotos();
     var defaultPhoto = photoWrapperTemplate.cloneNode(true);
     photosContainer.appendChild(defaultPhoto);
   };
 
   fileChooserAvatar.addEventListener('change', function () {
-    window.error.removeModalErrorInfo();
+    window.error.removeModal();
     var file = fileChooserAvatar.files[0];
 
     if (file !== undefined) {
@@ -43,7 +47,7 @@
         });
         reader.readAsDataURL(file);
       } else {
-        window.error.createModalErrorInfo('Wrong file type! Supported Formats: gif, jpg, jpeg, png');
+        window.error.createModal('Wrong file type! Supported Formats: gif, jpg, jpeg, png');
       }
     } else {
       avatarPreview.src = SRC_AVATAR;
@@ -51,7 +55,7 @@
 
   });
 
-  var loadPhotos = function (img) {
+  var loadAllPhotos = function (img) {
     var WrapperPhoto = document.createElement('div');
     WrapperPhoto.classList.add('ad-form__photo');
     photosContainer.appendChild(WrapperPhoto);
@@ -62,7 +66,7 @@
   };
 
   filesChooserPhotos.addEventListener('change', function () {
-    window.error.removeModalErrorInfo();
+    window.error.removeModal();
     var filesForLoaded = filesChooserPhotos.files;
 
     if (filesForLoaded) {
@@ -75,13 +79,13 @@
         });
 
         if (!matches) {
-          window.error.createModalErrorInfo('Wrong file type! Supported Formats: gif, jpg, jpeg, png');
+          window.error.createModal('Wrong file type! Supported Formats: gif, jpg, jpeg, png');
           continue;
         }
 
         var fileReader = new FileReader();
         fileReader.addEventListener('load', function (evt) {
-          loadPhotos(evt.srcElement.result);
+          loadAllPhotos(evt.srcElement.result);
         });
 
         fileReader.readAsDataURL(filesForLoaded[i]);
@@ -90,9 +94,8 @@
   });
 
   window.loadPhotos = {
-    SRC_AVATAR: SRC_AVATAR,
-    avatarPreview: avatarPreview,
-    resetPhotos: resetPhotos
+    setDefaultAvatar: setDefaultAvatar,
+    reset: reset
   };
 
 

@@ -2,7 +2,7 @@
 
 (function () {
 
-  var createModalErrorInfo = function (errorMessage) {
+  var createModal = function (errorMessage) {
     var modalWindow = document.createElement('div');
     modalWindow.classList.add('error-wrap');
     modalWindow.style = 'z-index: 3; text-align: center; background-color: red; transform: translate(-50%, -50%); padding: 25px; opacity: 0.9; color: #fff';
@@ -15,7 +15,7 @@
     document.body.insertAdjacentElement('afterBegin', modalWindow);
   };
 
-  var removeModalErrorInfo = function () {
+  var removeModal = function () {
     var itemErrorElement = document.querySelector('.error-wrap');
     if (itemErrorElement) {
       itemErrorElement.remove();
@@ -23,8 +23,8 @@
   };
 
   window.error = {
-    createModalErrorInfo: createModalErrorInfo,
-    removeModalErrorInfo: removeModalErrorInfo
+    createModal: createModal,
+    removeModal: removeModal
   };
 
 })();

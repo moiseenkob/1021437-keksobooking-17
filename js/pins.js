@@ -5,11 +5,11 @@
 
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var pinsArea = document.querySelector('.map__pins');
+  var area = document.querySelector('.map__pins');
   var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
 
   /* Function remove items */
-  var removePins = function () {
+  var remove = function () {
     var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     if (pinsMap.length > 0) {
       for (var i = 0; i < pinsMap.length; i++) {
@@ -18,7 +18,7 @@
     }
   };
 
-  var renderPins = function (pin) {
+  var render = function (pin) {
     var fragment = document.createDocumentFragment();
     /* Insert data from our function */
     pin.forEach(function (item) {
@@ -41,11 +41,10 @@
           var firstCardOfMap = document.querySelector('.map__card');
           if (firstCardOfMap !== null) {
             firstCardOfMap.parentNode.removeChild(firstCardOfMap);
-            window.renderCard.renderCard(item);
-            window.renderCard.removeActivePin();
+            window.card(item);
             houseElements.classList.add('map__pin--active');
           } else {
-            window.renderCard.renderCard(item);
+            window.card(item);
             houseElements.classList.add('map__pin--active');
           }
         });
@@ -53,7 +52,7 @@
         /* Insert objects into the fragment */
         fragment.appendChild(houseElements);
 
-        pinsArea.appendChild(fragment);
+        area.appendChild(fragment);
       }
 
     });
@@ -61,10 +60,10 @@
     return fragment;
   };
 
-  window.handlerPins = {
-    removePins: removePins,
-    renderPins: renderPins,
-    pinsArea: pinsArea
+  window.pins = {
+    remove: remove,
+    render: render,
+    area: area
   };
 
 })();
