@@ -100,12 +100,12 @@
         fieldCard.remove();
       }
     };
-
+    // offer.rooms > 0 ? formatCapacity(offer) : ''
     setFieldsWithData(titleCardsItems, item.offer.title);
     setFieldsWithData(addressCardsItems, item.offer.address);
     setFieldsWithData(priceCardsItems, item.offer.price + '₽/ночь.');
     setFieldsWithData(typeCardsItems, typesToValues[item.offer.type]);
-    setFieldsWithData(roomsAndGuestsCardsItems, item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей');
+    setFieldsWithData(roomsAndGuestsCardsItems, item.offer.rooms > 0 ? item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей' : '');
     setFieldsWithData(timeBookingInAndOutCardsItems, 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout);
     setFieldsWithData(descriptionCardsItems, item.offer.description);
     setFieldsWithData(descriptionCardsItems, item.offer.description);

@@ -4,28 +4,16 @@
 
   var DEBOUNCE_INTERVAL = 500;
   var COUNT_HOUSE = 5;
-  var NUMBER_SYSTEM = 10;
-  var NUMBER_OF_LETTERS = 7;
   var fieldsFilters = document.querySelectorAll('.map__filters select');
   var fieldsFiltersFeatures = document.querySelectorAll('.map__filters fieldset');
-  var dataPins = [];
-  var filters = {
-    'housing-type': 'any',
-    'housing-price': 'any',
-    'housing-rooms': 'any',
-    'housing-guests': 'any',
-    'wifi': 'false',
-    'dishwasher': 'false',
-    'parking': 'false',
-    'washer': 'false',
-    'elevator': 'false',
-    'conditioner': 'false'
-  };
+  var mapFiltersForm = document.querySelector('.map__filters');
+  var filterOptions = Array.from(mapFiltersForm.children);
   var typeToMinPrice = {
     'middle': [10000, 50000],
-    'low': [10000],
-    'high': [50000]
+    'low': [0, 10000],
+    'high': [50000, Infinity]
   };
+  var dataPins = [];
   var lastTimeout;
 
   /* Item count filter */
@@ -42,81 +30,6 @@
     window.form.wrapperFilters.classList.remove('ad-form--disabled');
   };
 
-  var getPinsWithFilters = function (dict) {
-    var housingTypeFilter;
-
-    for (var key in dict) {
-      if (dict[key] !== 'any') {
-        housingTypeFilter = dataPins.filter(function (houseItems) {
-          if (dict['housing-type'] !== 'any') {
-            return houseItems['offer']['type'] === dict['housing-type'];
-          }
-          return true;
-        }).
-        filter(function (houseItems) {
-          switch (dict['housing-price']) {
-            case 'high':
-              return houseItems['offer']['price'] > typeToMinPrice[dict['housing-price']];
-            case 'middle':
-              return houseItems['offer']['price'] > typeToMinPrice[dict['housing-price']][0] && houseItems['offer']['price'] < typeToMinPrice[dict['housing-price']][1];
-            case 'low':
-              return houseItems['offer']['price'] < typeToMinPrice[dict['housing-price']];
-            default:
-              return true;
-          }
-        }).
-        filter(function (houseItems) {
-          if (dict['housing-rooms'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['housing-rooms'], NUMBER_SYSTEM);
-          }
-          return true;
-        }).
-        filter(function (houseItems) {
-          if (dict['housing-guests'] !== 'any') {
-            return houseItems['offer']['rooms'] === parseInt(dict['housing-guests'], NUMBER_SYSTEM);
-          }
-          return true;
-        }).
-        filter(function (houseItems) {
-          var currentFeatures = setFeatures(filters);
-          var houseItemsFeatures = houseItems['offer']['features'];
-          var result = true;
-
-          for (var i = 0; i < currentFeatures.length; i++) {
-            var item = currentFeatures[i];
-            if (houseItemsFeatures.indexOf(item) === -1) {
-              result = false;
-              break;
-            }
-          }
-          return result;
-        });
-
-      }
-    }
-    return housingTypeFilter;
-  };
-
-  var renderFiltersPins = function () {
-    var pins = getPinsWithFilters(filters);
-    var blockPins = pins.slice(0, COUNT_HOUSE);
-    window.pins.remove();
-    window.pins.render(blockPins);
-  };
-
-
-  var setFeatures = function (lists) {
-    var features = [];
-
-    for (var key in lists) {
-      if (lists[key] === true) {
-        features.push(key);
-      }
-    }
-
-    return features;
-  };
-
   var removeCard = function () {
     var cardPinActive = document.querySelector('.map__card');
     if (cardPinActive !== null) {
@@ -124,23 +37,55 @@
     }
   };
 
-  var onFormFilterClick = function (evt) {
+  var filterRules = {
+    'housing-type': function (data, filter) {
+      return filter.value === data.offer.type;
+    },
 
-    removeCard();
-    var key = evt.target.name !== 'features' ? evt.target.name : evt.target.id.slice(NUMBER_OF_LETTERS);
-    var value = evt.target.name !== 'features' ? evt.target.value : evt.target.checked;
-    filters[key] = value;
+    'housing-price': function (data, filter) {
+      return data.offer.price >= typeToMinPrice[filter.value][0] && data.offer.price < typeToMinPrice[filter.value][1];
+    },
 
+    'housing-rooms': function (data, filter) {
+      return filter.value === data.offer.rooms.toString();
+    },
+
+    'housing-guests': function (data, filter) {
+      return filter.value === data.offer.guests.toString();
+    },
+
+    'housing-features': function (data, filter) {
+      var filterCheckboxes = Array.from(filter.querySelectorAll('input[type=checkbox]:checked'));
+      return filterCheckboxes.every(function (it) {
+        return data.offer.features.some(function (feature) {
+          return feature === it.value;
+        });
+      });
+    }
+  };
+
+  var filterData = function (data) {
+    return data.filter(function (item) {
+      return filterOptions.every(function (filter) {
+        return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
+      });
+    });
+  };
+
+  var onFormFilterClick = function () {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
-
     lastTimeout = window.setTimeout(function () {
-      renderFiltersPins();
+      removeCard();
+      window.pins.remove();
+      var filteredPins = filterData(dataPins);
+      window.pins.render(filteredPins.slice(0, COUNT_HOUSE));
     }, DEBOUNCE_INTERVAL);
+
   };
 
-  window.form.wrapperFilters.addEventListener('change', onFormFilterClick);
+  mapFiltersForm.addEventListener('change', onFormFilterClick);
 
   window.createPins = createPins;
 
