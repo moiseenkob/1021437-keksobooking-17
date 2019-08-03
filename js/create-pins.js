@@ -21,7 +21,7 @@
     'elevator': 'false',
     'conditioner': 'false'
   };
-  var price = {
+  var typeToMinPrice = {
     'middle': [10000, 50000],
     'low': [10000],
     'high': [50000]
@@ -56,11 +56,11 @@
         filter(function (houseItems) {
           switch (dict['housing-price']) {
             case 'high':
-              return houseItems['offer']['price'] > price[dict['housing-price']];
+              return houseItems['offer']['price'] > typeToMinPrice[dict['housing-price']];
             case 'middle':
-              return houseItems['offer']['price'] > price[dict['housing-price']][0] && houseItems['offer']['price'] < price[dict['housing-price']][1];
+              return houseItems['offer']['price'] > typeToMinPrice[dict['housing-price']][0] && houseItems['offer']['price'] < typeToMinPrice[dict['housing-price']][1];
             case 'low':
-              return houseItems['offer']['price'] < price[dict['housing-price']];
+              return houseItems['offer']['price'] < typeToMinPrice[dict['housing-price']];
             default:
               return true;
           }
@@ -105,16 +105,16 @@
   };
 
 
-  var setFeatures = function (features) {
-    var listFeatures = [];
+  var setFeatures = function (lists) {
+    var features = [];
 
-    for (var key in features) {
-      if (features[key] === true) {
-        listFeatures.push(key);
+    for (var key in lists) {
+      if (lists[key] === true) {
+        features.push(key);
       }
     }
 
-    return listFeatures;
+    return features;
   };
 
   var removeCard = function () {

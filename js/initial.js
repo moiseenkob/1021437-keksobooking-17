@@ -3,7 +3,7 @@
 (function () {
 
   var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_HEIGHT = 70;
   var pinBase = document.querySelector('.map__pin--main');
   var flagRenderPins = false;
 

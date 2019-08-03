@@ -27,6 +27,7 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
+      window.initial.onPinMainClick();
 
       /* Height and width */
       var coordinateYPoint = window.initial.pinBase.offsetTop - shift.y;

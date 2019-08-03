@@ -109,6 +109,7 @@
     window.loadPhotos.setDefaultAvatar();
     formMain.classList.add('ad-form--disabled');
     wrapperFilters.classList.add('ad-form--disabled');
+    wrapperFilters.reset();
     map.classList.add('map--faded');
     addAttributeDisabled(allSelectFromFilters);
     addAttributeDisabled(allFieldFromForm);
@@ -149,7 +150,7 @@
   };
 
   // Close card key ESC
-  var onMessageKeyPress = function (evt) {
+  var onMessageEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       blockMessage.remove();
     }
@@ -158,7 +159,7 @@
   formMain.addEventListener('submit', function (evt) {
     var formData = new FormData(formMain);
     window.backend.uploadDataToServer(formData, getSuccessfulMessage, getErrorMessage);
-    document.addEventListener('keydown', onMessageKeyPress);
+    document.addEventListener('keydown', onMessageEscPress);
     document.addEventListener('click', onMessageClick);
     evt.preventDefault();
   });
