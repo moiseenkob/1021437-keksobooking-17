@@ -5,15 +5,15 @@
 
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var area = document.querySelector('.map__pins');
-  var visibleHouseMap = document.querySelector('#pin').content.querySelector('.map__pin');
+  var areaElement = document.querySelector('.map__pins');
+  var visibleHouseMapElement = document.querySelector('#pin').content.querySelector('.map__pin');
 
   /* Function remove items */
   var remove = function () {
-    var pinsMap = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    if (pinsMap.length > 0) {
-      for (var i = 0; i < pinsMap.length; i++) {
-        pinsMap[i].remove();
+    var pinsMapElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    if (pinsMapElements.length > 0) {
+      for (var i = 0; i < pinsMapElements.length; i++) {
+        pinsMapElements[i].remove();
       }
     }
   };
@@ -24,13 +24,13 @@
     pin.forEach(function (item) {
 
       /* We clone data from a template */
-      var houseElements = visibleHouseMap.cloneNode(true);
+      var houseElements = visibleHouseMapElement.cloneNode(true);
 
       if (item['offer'] !== undefined) {
         /* Changing data */
-        var imageItem = houseElements.querySelector('img');
-        imageItem.src = item['author']['avatar'];
-        imageItem.alt = item['offer']['title'];
+        var imageItemElement = houseElements.querySelector('img');
+        imageItemElement.src = item['author']['avatar'];
+        imageItemElement.alt = item['offer']['title'];
 
         houseElements.style.left = item['location']['x'] - (PIN_WIDTH / 2) + 'px';
         houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
@@ -38,9 +38,9 @@
         // Render card
         houseElements.addEventListener('click', function () {
 
-          var firstCardOfMap = document.querySelector('.map__card');
-          if (firstCardOfMap !== null) {
-            firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+          var firstCardOfMapElement = document.querySelector('.map__card');
+          if (firstCardOfMapElement !== null) {
+            firstCardOfMapElement.parentNode.removeChild(firstCardOfMapElement);
             window.card(item);
             houseElements.classList.add('map__pin--active');
           } else {
@@ -52,7 +52,7 @@
         /* Insert objects into the fragment */
         fragment.appendChild(houseElements);
 
-        area.appendChild(fragment);
+        areaElement.appendChild(fragment);
       }
 
     });
@@ -63,7 +63,7 @@
   window.pins = {
     remove: remove,
     render: render,
-    area: area
+    areaElement: areaElement
   };
 
 })();

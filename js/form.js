@@ -23,26 +23,26 @@
     'house': 5000,
     'palace': 10000
   };
-  var selectDateTimeIn = document.querySelector('#timein');
-  var selectDateTimeOut = document.querySelector('#timeout');
-  var selectTypeHouse = document.querySelector('#type');
-  var setMinPriceField = document.querySelector('#price');
-  var roomCounter = document.querySelector('#room_number');
-  var guestValue = document.querySelectorAll('#capacity option');
-  var selectGuestField = document.querySelector('#capacity');
-  var titleAd = document.querySelector('#title');
-  var textDescription = document.querySelector('#description');
-  var wrapperFilters = document.querySelector('.map__filters');
-  var allComfort = wrapperFilters.querySelectorAll('fieldset');
-  var allSelectFromFilters = wrapperFilters.querySelectorAll('select');
-  var setTimeForm = document.querySelector('.ad-form__element--time');
-  var allFieldFromForm = document.querySelectorAll('.ad-form fieldset');
-  var fieldAddress = document.querySelector('input[name="address"]');
-  var formMain = document.querySelector('.ad-form');
-  var fieldFeatures = document.querySelectorAll('.features input');
-  var allViewScreen = document.querySelector('main');
-  var buttonReset = formMain.querySelector('.ad-form__reset');
-  var map = document.querySelector('.map');
+  var selectTimeInElement = document.querySelector('#timein');
+  var selectTimeOutElement = document.querySelector('#timeout');
+  var selectTypeHouseElement = document.querySelector('#type');
+  var selectMinPriceElement = document.querySelector('#price');
+  var selectRoomCounterElement = document.querySelector('#room_number');
+  var guestValueElements = document.querySelectorAll('#capacity option');
+  var selectGuestElement = document.querySelector('#capacity');
+  var titleAdElement = document.querySelector('#title');
+  var textDescriptionElement = document.querySelector('#description');
+  var wrapperFiltersElement = document.querySelector('.map__filters');
+  var comfortElements = wrapperFiltersElement.querySelectorAll('fieldset');
+  var selectFiltersElements = wrapperFiltersElement.querySelectorAll('select');
+  var timeFormElement = document.querySelector('.ad-form__element--time');
+  var fieldsFormElements = document.querySelectorAll('.ad-form fieldset');
+  var addressElement = document.querySelector('input[name="address"]');
+  var formMainElement = document.querySelector('.ad-form');
+  var featuresElement = document.querySelectorAll('.features input');
+  var mainScreenElement = document.querySelector('main');
+  var buttonResetElement = formMainElement.querySelector('.ad-form__reset');
+  var mapElement = document.querySelector('.map');
   var templateSuccessMessage = document.querySelector('#success').content.querySelector('.success');
   var templateErrorMessage = document.querySelector('#error').content.querySelector('.error');
   var dataRooms = [];
@@ -61,7 +61,7 @@
   var onSetChangeRoomCount = function (evt) {
     roomCountStock = evt.target.value;
     dataRooms = valueToCountRooms[evt.target.value];
-    setBorderRoomCount(guestValue, dataRooms);
+    setBorderRoomCount(guestValueElements, dataRooms);
     onSetGuestValidation(roomCountStock, guestCountStock);
   };
 
@@ -71,28 +71,28 @@
   };
 
   /* Select Room */
-  roomCounter.addEventListener('change', onSetChangeRoomCount);
+  selectRoomCounterElement.addEventListener('change', onSetChangeRoomCount);
 
   /* Select Guest */
-  selectGuestField.addEventListener('change', onSetChangeGuestCount);
+  selectGuestElement.addEventListener('change', onSetChangeGuestCount);
 
   var onSetGuestValidation = function (countRoom, countGuest) {
 
     var room = parseInt(countRoom, NUMBER_SYSTEM);
     var guest = parseInt(countGuest, NUMBER_SYSTEM);
     if (room < guest) {
-      selectGuestField.setCustomValidity('Change the number of guests');
+      selectGuestElement.setCustomValidity('Change the number of guests');
     } else if ((room < MAX_ROOM && guest === MIN_GUEST) || (room === MAX_ROOM && guest > MIN_GUEST)) {
-      selectGuestField.setCustomValidity('Change the number of guests');
+      selectGuestElement.setCustomValidity('Change the number of guests');
     } else {
-      selectGuestField.setCustomValidity('');
-      selectGuestField.style.background = 'white';
+      selectGuestElement.setCustomValidity('');
+      selectGuestElement.style.background = 'white';
     }
   };
 
   // Default value count room and guest
   var setDefaultValueCountGuest = function () {
-    selectGuestField.value = '1';
+    selectGuestElement.value = '1';
     guestCountStock = '1';
     onSetGuestValidation(roomCountStock, guestCountStock);
   };
@@ -103,18 +103,18 @@
   };
 
   var setDefaultValueFormAndArea = function () {
-    titleAd.value = '';
-    setMinPriceField.value = '';
-    textDescription.value = '';
+    titleAdElement.value = '';
+    selectMinPriceElement.value = '';
+    textDescriptionElement.value = '';
     window.loadPhotos.setDefaultAvatar();
-    formMain.classList.add('ad-form--disabled');
-    wrapperFilters.classList.add('ad-form--disabled');
-    wrapperFilters.reset();
-    map.classList.add('map--faded');
-    addAttributeDisabled(allSelectFromFilters);
-    addAttributeDisabled(allFieldFromForm);
-    addAttributeDisabled(allComfort);
-    setFeaturesDisabled(fieldFeatures);
+    formMainElement.classList.add('ad-form--disabled');
+    wrapperFiltersElement.classList.add('ad-form--disabled');
+    wrapperFiltersElement.reset();
+    mapElement.classList.add('map--faded');
+    addAttributeDisabled(selectFiltersElements);
+    addAttributeDisabled(fieldsFormElements);
+    addAttributeDisabled(comfortElements);
+    setFeaturesDisabled(featuresElement);
     window.loadPhotos.reset();
     window.initial.pinBase.addEventListener('click', window.initial.onPinMainClick);
   };
@@ -122,31 +122,31 @@
   var clearFieldAndPins = function () {
     setDefaultValueFormAndArea();
     /* Default value main pin */
-    fieldAddress.value = STOCK_VALUE_MAIN_PIN;
+    addressElement.value = STOCK_VALUE_MAIN_PIN;
     window.initial.pinBase.style.left = DefaultPositionMainPin.X + 'px';
     window.initial.pinBase.style.top = DefaultPositionMainPin.Y + 'px';
     // Remove pins
     window.pins.remove();
     // Remove cards
-    var firstCardOfMap = document.querySelector('.map__card');
-    if (firstCardOfMap !== null) {
-      firstCardOfMap.parentNode.removeChild(firstCardOfMap);
+    var firstCardElement = document.querySelector('.map__card');
+    if (firstCardElement !== null) {
+      firstCardElement.parentNode.removeChild(firstCardElement);
     }
   };
 
   var getSuccessfulMessage = function () {
     blockMessage = templateSuccessMessage.cloneNode(true);
-    allViewScreen.appendChild(blockMessage);
+    mainScreenElement.appendChild(blockMessage);
     clearFieldAndPins();
   };
 
   var setActiveMap = function () {
-    map.classList.remove('map--faded');
+    mapElement.classList.remove('map--faded');
   };
 
   var getErrorMessage = function () {
     blockMessage = templateErrorMessage.cloneNode(true);
-    allViewScreen.appendChild(blockMessage);
+    mainScreenElement.appendChild(blockMessage);
   };
 
   // Close card key ESC
@@ -156,8 +156,8 @@
     }
   };
 
-  formMain.addEventListener('submit', function (evt) {
-    var formData = new FormData(formMain);
+  formMainElement.addEventListener('submit', function (evt) {
+    var formData = new FormData(formMainElement);
     window.backend.uploadDataToServer(formData, getSuccessfulMessage, getErrorMessage);
     document.addEventListener('keydown', onMessageEscPress);
     document.addEventListener('click', onMessageClick);
@@ -181,60 +181,60 @@
   };
 
   /* Calling Functions to Add Disabled Attributes */
-  addAttributeDisabled(allSelectFromFilters);
-  addAttributeDisabled(allFieldFromForm);
-  addAttributeDisabled(allComfort);
+  addAttributeDisabled(selectFiltersElements);
+  addAttributeDisabled(fieldsFormElements);
+  addAttributeDisabled(comfortElements);
 
   /* Replacing the price when changing the type of housing */
   var onTypeHouseChange = function (evt) {
     var value = evt.target.value;
-    setMinPriceField.placeholder = typeHouseToPrice[value];
-    setMinPriceField.min = typeHouseToPrice[value];
+    selectMinPriceElement.placeholder = typeHouseToPrice[value];
+    selectMinPriceElement.min = typeHouseToPrice[value];
   };
 
   var setActiveField = function () {
-    for (var i = 0; i < allFieldFromForm.length; i++) {
-      allFieldFromForm[i].removeAttribute('disabled');
+    for (var i = 0; i < fieldsFormElements.length; i++) {
+      fieldsFormElements[i].removeAttribute('disabled');
     }
-    formMain.classList.remove('ad-form--disabled');
+    formMainElement.classList.remove('ad-form--disabled');
   };
 
 
   /* Reset function */
   var setDefaultValues = function () {
-    setMinPriceField.placeholder = typeHouseToPrice['flat'];
-    fieldAddress.value = window.initial.getBaseCoordinates('disabled');
+    selectMinPriceElement.placeholder = typeHouseToPrice['flat'];
+    addressElement.value = window.initial.getBaseCoordinates('disabled');
   };
 
-  buttonReset.addEventListener('click', function () {
+  buttonResetElement.addEventListener('click', function () {
     clearFieldAndPins();
   });
 
   /* We listen to the event to indicate the price when choosing a type of housing */
-  selectTypeHouse.addEventListener('change', onTypeHouseChange);
+  selectTypeHouseElement.addEventListener('change', onTypeHouseChange);
 
   /* Setting the time when choosing entry or exit */
   var onTimeSetFormChange = function (evt) {
     var target = evt.target;
-    if (target.id === selectDateTimeIn.id) {
-      selectDateTimeOut.options.selectedIndex = target.options.selectedIndex;
+    if (target.id === selectTimeInElement.id) {
+      selectTimeOutElement.options.selectedIndex = target.options.selectedIndex;
     } else {
-      selectDateTimeIn.options.selectedIndex = target.options.selectedIndex;
+      selectTimeInElement.options.selectedIndex = target.options.selectedIndex;
     }
   };
 
   /* Listening event to indicate the time of settlement and departure */
-  setTimeForm.addEventListener('change', onTimeSetFormChange);
+  timeFormElement.addEventListener('change', onTimeSetFormChange);
 
   setDefaultValues();
 
   window.form = {
-    fieldAddress: fieldAddress,
+    addressElement: addressElement,
     setActiveField: setActiveField,
     setActiveMap: setActiveMap,
-    map: map,
+    mapElement: mapElement,
     ESC_KEYCODE: ESC_KEYCODE,
-    wrapperFilters: wrapperFilters
+    wrapperFiltersElement: wrapperFiltersElement
   };
 
 })();

@@ -4,13 +4,13 @@
 
   var MAIN_PIN_WIDTH = 65;
   var MAIN_PIN_HEIGHT = 70;
-  var pinBase = document.querySelector('.map__pin--main');
+  var pinBaseElement = document.querySelector('.map__pin--main');
   var flagRenderPins = false;
 
   /* Functions for setting the value for active action and blocking */
   var getBaseCoordinates = function (state) {
-    var left = pinBase.offsetLeft;
-    var top = pinBase.offsetTop;
+    var left = pinBaseElement.offsetLeft;
+    var top = pinBaseElement.offsetTop;
 
     switch (state) {
       case 'active':
@@ -24,15 +24,15 @@
 
 
   var onPinMainClick = function () {
-    var blockMap = document.querySelector('.map--faded');
-    if (blockMap !== null) {
+    var blockMapElement = document.querySelector('.map--faded');
+    if (blockMapElement !== null) {
       flagRenderPins = false;
     }
     window.form.setActiveMap();
     window.form.setActiveField();
 
     /* Write the data in the address field when the label is active */
-    window.form.fieldAddress.value = window.initial.getBaseCoordinates('active');
+    window.form.addressElement.value = window.initial.getBaseCoordinates('active');
 
     if (!flagRenderPins) {
       window.pins.remove();
@@ -40,14 +40,14 @@
     }
     flagRenderPins = true;
 
-    pinBase.removeEventListener('click', onPinMainClick);
+    pinBaseElement.removeEventListener('click', onPinMainClick);
   };
 
-  pinBase.addEventListener('click', onPinMainClick);
-  pinBase.addEventListener('mousedown', window.mainPinDrag);
+  pinBaseElement.addEventListener('click', onPinMainClick);
+  pinBaseElement.addEventListener('mousedown', window.mainPinDrag);
 
   window.initial = {
-    pinBase: pinBase,
+    pinBase: pinBaseElement,
     getBaseCoordinates: getBaseCoordinates,
     onPinMainClick: onPinMainClick
   };

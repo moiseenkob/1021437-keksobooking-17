@@ -4,10 +4,10 @@
 
   var DEBOUNCE_INTERVAL = 500;
   var COUNT_HOUSE = 5;
-  var fieldsFilters = document.querySelectorAll('.map__filters select');
-  var fieldsFiltersFeatures = document.querySelectorAll('.map__filters fieldset');
-  var mapFiltersForm = document.querySelector('.map__filters');
-  var filterOptions = Array.from(mapFiltersForm.children);
+  var fieldsFiltersElements = document.querySelectorAll('.map__filters select');
+  var fieldsFiltersFeaturesElements = document.querySelectorAll('.map__filters fieldset');
+  var mapFiltersFormElement = document.querySelector('.map__filters');
+  var filterOptions = Array.from(mapFiltersFormElement.children);
   var typeToMinPrice = {
     'middle': [10000, 50000],
     'low': [0, 10000],
@@ -21,19 +21,19 @@
     dataPins = data;
     window.pins.render(data.slice(0, COUNT_HOUSE));
 
-    for (var i = 0; i < fieldsFilters.length; i++) {
-      fieldsFilters[i].removeAttribute('disabled');
+    for (var i = 0; i < fieldsFiltersElements.length; i++) {
+      fieldsFiltersElements[i].removeAttribute('disabled');
     }
-    for (var y = 0; y < fieldsFiltersFeatures.length; y++) {
-      fieldsFiltersFeatures[y].removeAttribute('disabled');
+    for (var y = 0; y < fieldsFiltersFeaturesElements.length; y++) {
+      fieldsFiltersFeaturesElements[y].removeAttribute('disabled');
     }
-    window.form.wrapperFilters.classList.remove('ad-form--disabled');
+    window.form.wrapperFiltersElement.classList.remove('ad-form--disabled');
   };
 
   var removeCard = function () {
-    var cardPinActive = document.querySelector('.map__card');
-    if (cardPinActive !== null) {
-      cardPinActive.remove();
+    var cardPinActiveElement = document.querySelector('.map__card');
+    if (cardPinActiveElement !== null) {
+      cardPinActiveElement.remove();
     }
   };
 
@@ -66,8 +66,8 @@
 
   var filterData = function (data) {
     return data.filter(function (item) {
-      return filterOptions.every(function (filter) {
-        return (filter.value === 'any') ? true : filterRules[filter.id](item, filter);
+      return filterOptions.every(function (option) {
+        return (option.value === 'any') ? true : filterRules[option.id](item, option);
       });
     });
   };
@@ -85,7 +85,7 @@
 
   };
 
-  mapFiltersForm.addEventListener('change', onFormFilterClick);
+  mapFiltersFormElement.addEventListener('change', onFormFilterClick);
 
   window.createPins = createPins;
 

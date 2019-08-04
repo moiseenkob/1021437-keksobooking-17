@@ -4,34 +4,34 @@
 
   var SRC_AVATAR = 'img/muffin-grey.svg';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var avatarPreview = document.querySelector('.ad-form-header__preview img');
-  var photosContainer = document.querySelector('.ad-form__photo-container');
-  var filesChooserPhotos = document.querySelector('.ad-form__upload input[type=file]');
-  var fileChooserAvatar = document.querySelector('.ad-form__field input[type=file]');
-  var preview = document.querySelector('.ad-form-header__preview img');
-  var photoWrapper = document.querySelector('.ad-form__photo');
-  var photoWrapperTemplate = photoWrapper.cloneNode(true);
+  var avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
+  var photosContainerElement = document.querySelector('.ad-form__photo-container');
+  var filesChooserPhotosElement = document.querySelector('.ad-form__upload input[type=file]');
+  var fileChooserAvatarElement = document.querySelector('.ad-form__field input[type=file]');
+  var previewElement = document.querySelector('.ad-form-header__preview img');
+  var photoWrapperElement = document.querySelector('.ad-form__photo');
+  var photoWrapperTemplate = photoWrapperElement.cloneNode(true);
 
   var removePhotos = function () {
-    var element = document.querySelectorAll('.ad-form__photo');
-    element.forEach(function (item) {
+    var blocksElements = document.querySelectorAll('.ad-form__photo');
+    blocksElements.forEach(function (item) {
       item.remove();
     });
   };
 
   var setDefaultAvatar = function () {
-    avatarPreview.src = SRC_AVATAR;
+    avatarPreviewElement.src = SRC_AVATAR;
   };
 
   var reset = function () {
     removePhotos();
     var defaultPhoto = photoWrapperTemplate.cloneNode(true);
-    photosContainer.appendChild(defaultPhoto);
+    photosContainerElement.appendChild(defaultPhoto);
   };
 
-  fileChooserAvatar.addEventListener('change', function () {
+  fileChooserAvatarElement.addEventListener('change', function () {
     window.error.removeModal();
-    var file = fileChooserAvatar.files[0];
+    var file = fileChooserAvatarElement.files[0];
 
     if (file !== undefined) {
       var fileName = file.name.toLowerCase();
@@ -43,14 +43,14 @@
       if (matches) {
         var reader = new FileReader();
         reader.addEventListener('load', function () {
-          preview.src = reader.result;
+          previewElement.src = reader.result;
         });
         reader.readAsDataURL(file);
       } else {
         window.error.createModal('Wrong file type! Supported Formats: gif, jpg, jpeg, png');
       }
     } else {
-      avatarPreview.src = SRC_AVATAR;
+      avatarPreviewElement.src = SRC_AVATAR;
     }
 
   });
@@ -58,16 +58,16 @@
   var loadAllPhotos = function (img) {
     var WrapperPhoto = document.createElement('div');
     WrapperPhoto.classList.add('ad-form__photo');
-    photosContainer.appendChild(WrapperPhoto);
+    photosContainerElement.appendChild(WrapperPhoto);
     var adsPhotoPreviewImg = document.createElement('img');
     adsPhotoPreviewImg.style = 'height: 70px; width: 70px';
     adsPhotoPreviewImg.src = img;
     WrapperPhoto.appendChild(adsPhotoPreviewImg);
   };
 
-  filesChooserPhotos.addEventListener('change', function () {
+  filesChooserPhotosElement.addEventListener('change', function () {
     window.error.removeModal();
-    var filesForLoaded = filesChooserPhotos.files;
+    var filesForLoaded = filesChooserPhotosElement.files;
 
     if (filesForLoaded) {
       removePhotos();

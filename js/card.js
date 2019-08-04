@@ -2,7 +2,7 @@
 
 (function () {
 
-  var templateCard = document.querySelector('#card').content.querySelector('.map__card');
+  var templateCardElement = document.querySelector('#card').content.querySelector('.map__card');
   var typesToValues = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -11,9 +11,9 @@
   };
 
   var removeActivePin = function () {
-    var activePin = document.querySelector('.map__pin--active');
-    if (activePin !== null) {
-      activePin.classList.remove('map__pin--active');
+    var activePinElements = document.querySelector('.map__pin--active');
+    if (activePinElements !== null) {
+      activePinElements.classList.remove('map__pin--active');
     }
   };
 
@@ -53,27 +53,27 @@
   var renderInfo = function (item) {
 
     removeActivePin();
-    var cardElements = templateCard.cloneNode(true);
+    var cardElements = templateCardElement.cloneNode(true);
 
     // Find elements cards
-    var titleCardsItems = cardElements.querySelector('.popup__title');
-    var addressCardsItems = cardElements.querySelector('.popup__text--address');
-    var priceCardsItems = cardElements.querySelector('.popup__text--price');
-    var typeCardsItems = cardElements.querySelector('.popup__type');
-    var roomsAndGuestsCardsItems = cardElements.querySelector('.popup__text--capacity');
-    var timeBookingInAndOutCardsItems = cardElements.querySelector('.popup__text--time');
-    var descriptionCardsItems = cardElements.querySelector('.popup__description');
-    var avatarCardsItems = cardElements.querySelector('.popup__avatar');
-    var photosCardsItems = cardElements.querySelector('.popup__photos');
-    var featuresCardsItems = cardElements.querySelector('.popup__features');
+    var titleCardsElement = cardElements.querySelector('.popup__title');
+    var addressCardsElement = cardElements.querySelector('.popup__text--address');
+    var priceCardsElement = cardElements.querySelector('.popup__text--price');
+    var typeCardsElement = cardElements.querySelector('.popup__type');
+    var roomsAndGuestsCardsElement = cardElements.querySelector('.popup__text--capacity');
+    var timeBookingInAndOutCardsElement = cardElements.querySelector('.popup__text--time');
+    var descriptionCardsElement = cardElements.querySelector('.popup__description');
+    var avatarCardsElement = cardElements.querySelector('.popup__avatar');
+    var photosCardsElement = cardElements.querySelector('.popup__photos');
+    var featuresCardsElement = cardElements.querySelector('.popup__features');
 
     // Close card
-    var buttonCardClose = cardElements.querySelector('.popup__close');
+    var buttonCardCloseElement = cardElements.querySelector('.popup__close');
     var onButtonCardClose = function () {
       closeCard(cardElements);
     };
 
-    buttonCardClose.addEventListener('click', onButtonCardClose);
+    buttonCardCloseElement.addEventListener('click', onButtonCardClose);
 
     var onEscKeyPress = function (evt) {
       if (evt.keyCode === window.form.ESC_KEYCODE) {
@@ -101,18 +101,18 @@
       }
     };
     // offer.rooms > 0 ? formatCapacity(offer) : ''
-    setFieldsWithData(titleCardsItems, item.offer.title);
-    setFieldsWithData(addressCardsItems, item.offer.address);
-    setFieldsWithData(priceCardsItems, item.offer.price + '₽/ночь.');
-    setFieldsWithData(typeCardsItems, typesToValues[item.offer.type]);
-    setFieldsWithData(roomsAndGuestsCardsItems, item.offer.rooms > 0 ? item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей' : '');
-    setFieldsWithData(timeBookingInAndOutCardsItems, 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout);
-    setFieldsWithData(descriptionCardsItems, item.offer.description);
-    setFieldsWithData(descriptionCardsItems, item.offer.description);
-    setAvatarCard(avatarCardsItems, item.author.avatar);
-    setPhotosCard(item.offer.photos, photosCardsItems);
-    setFeatureCard(item.offer.features, featuresCardsItems);
-    window.form.map.insertBefore(cardElements, window.pins.area.nextSibling);
+    setFieldsWithData(titleCardsElement, item.offer.title);
+    setFieldsWithData(addressCardsElement, item.offer.address);
+    setFieldsWithData(priceCardsElement, item.offer.price + '₽/ночь.');
+    setFieldsWithData(typeCardsElement, typesToValues[item.offer.type]);
+    setFieldsWithData(roomsAndGuestsCardsElement, item.offer.rooms > 0 ? item.offer.rooms + ' комнаты для ' + item.offer.guests + ' гостей' : '');
+    setFieldsWithData(timeBookingInAndOutCardsElement, 'Заезд после ' + item.offer.checkin + ', выезд до ' + item.offer.checkout);
+    setFieldsWithData(descriptionCardsElement, item.offer.description);
+    setFieldsWithData(descriptionCardsElement, item.offer.description);
+    setAvatarCard(avatarCardsElement, item.author.avatar);
+    setPhotosCard(item.offer.photos, photosCardsElement);
+    setFeatureCard(item.offer.features, featuresCardsElement);
+    window.form.mapElement.insertBefore(cardElements, window.pins.areaElement.nextSibling);
   };
 
   window.card = renderInfo;
