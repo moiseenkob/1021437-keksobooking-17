@@ -4,9 +4,9 @@
 
   var DEBOUNCE_INTERVAL = 500;
   var COUNT_HOUSE = 5;
-  var fieldsFiltersElements = document.querySelectorAll('.map__filters select');
-  var fieldsFiltersFeaturesElements = document.querySelectorAll('.map__filters fieldset');
   var mapFiltersFormElement = document.querySelector('.map__filters');
+  var fieldsFiltersElements = mapFiltersFormElement.querySelectorAll('select');
+  var fieldsFiltersFeaturesElements = mapFiltersFormElement.querySelectorAll('fieldset');
   var filterOptions = Array.from(mapFiltersFormElement.children);
   var typeToMinPrice = {
     'middle': [10000, 50000],
@@ -22,17 +22,17 @@
     window.pins.render(data.slice(0, COUNT_HOUSE));
 
     for (var i = 0; i < fieldsFiltersElements.length; i++) {
-      fieldsFiltersElements[i].removeAttribute('disabled');
+      fieldsFiltersElements[i].disabled = false;
     }
     for (var y = 0; y < fieldsFiltersFeaturesElements.length; y++) {
-      fieldsFiltersFeaturesElements[y].removeAttribute('disabled');
+      fieldsFiltersFeaturesElements[y].disabled = false;
     }
     window.form.wrapperFiltersElement.classList.remove('ad-form--disabled');
   };
 
   var removeCard = function () {
     var cardPinActiveElement = document.querySelector('.map__card');
-    if (cardPinActiveElement !== null) {
+    if (cardPinActiveElement) {
       cardPinActiveElement.remove();
     }
   };

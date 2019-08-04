@@ -5,8 +5,8 @@
 
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
-  var areaElement = document.querySelector('.map__pins');
-  var visibleHouseMapElement = document.querySelector('#pin').content.querySelector('.map__pin');
+  var wrapperElement = document.querySelector('.map__pins');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
   /* Function remove items */
   var remove = function () {
@@ -24,35 +24,32 @@
     pin.forEach(function (item) {
 
       /* We clone data from a template */
-      var houseElements = visibleHouseMapElement.cloneNode(true);
+      var mapPin = pinTemplate.cloneNode(true);
 
-      if (item['offer'] !== undefined) {
+      if (item['offer']) {
         /* Changing data */
-        var imageItemElement = houseElements.querySelector('img');
+        var imageItemElement = mapPin.querySelector('img');
         imageItemElement.src = item['author']['avatar'];
         imageItemElement.alt = item['offer']['title'];
-
-        houseElements.style.left = item['location']['x'] - (PIN_WIDTH / 2) + 'px';
-        houseElements.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
+        mapPin.style.left = item['location']['x'] - (PIN_WIDTH / 2) + 'px';
+        mapPin.style.top = item['location']['y'] - PIN_HEIGHT + 'px';
 
         // Render card
-        houseElements.addEventListener('click', function () {
-
+        mapPin.addEventListener('click', function () {
           var firstCardOfMapElement = document.querySelector('.map__card');
-          if (firstCardOfMapElement !== null) {
+          if (firstCardOfMapElement) {
             firstCardOfMapElement.parentNode.removeChild(firstCardOfMapElement);
             window.card(item);
-            houseElements.classList.add('map__pin--active');
+            mapPin.classList.add('map__pin--active');
           } else {
             window.card(item);
-            houseElements.classList.add('map__pin--active');
+            mapPin.classList.add('map__pin--active');
           }
         });
 
         /* Insert objects into the fragment */
-        fragment.appendChild(houseElements);
-
-        areaElement.appendChild(fragment);
+        fragment.appendChild(mapPin);
+        wrapperElement.appendChild(fragment);
       }
 
     });
@@ -63,7 +60,7 @@
   window.pins = {
     remove: remove,
     render: render,
-    areaElement: areaElement
+    wrapperElement: wrapperElement
   };
 
 })();

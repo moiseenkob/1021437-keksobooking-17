@@ -5,11 +5,10 @@
   var SRC_AVATAR = 'img/muffin-grey.svg';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
-  var photosContainerElement = document.querySelector('.ad-form__photo-container');
-  var filesChooserPhotosElement = document.querySelector('.ad-form__upload input[type=file]');
   var fileChooserAvatarElement = document.querySelector('.ad-form__field input[type=file]');
-  var previewElement = document.querySelector('.ad-form-header__preview img');
-  var photoWrapperElement = document.querySelector('.ad-form__photo');
+  var photosContainerElement = document.querySelector('.ad-form__photo-container');
+  var filesChooserPhotosElement = photosContainerElement.querySelector('.ad-form__upload input[type=file]');
+  var photoWrapperElement = photosContainerElement.querySelector('.ad-form__photo');
   var photoWrapperTemplate = photoWrapperElement.cloneNode(true);
 
   var removePhotos = function () {
@@ -33,7 +32,7 @@
     window.error.removeModal();
     var file = fileChooserAvatarElement.files[0];
 
-    if (file !== undefined) {
+    if (file) {
       var fileName = file.name.toLowerCase();
 
       var matches = FILE_TYPES.some(function (it) {
@@ -43,7 +42,7 @@
       if (matches) {
         var reader = new FileReader();
         reader.addEventListener('load', function () {
-          previewElement.src = reader.result;
+          avatarPreviewElement.src = reader.result;
         });
         reader.readAsDataURL(file);
       } else {

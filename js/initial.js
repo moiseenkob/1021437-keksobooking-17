@@ -25,7 +25,7 @@
 
   var onPinMainClick = function () {
     var blockMapElement = document.querySelector('.map--faded');
-    if (blockMapElement !== null) {
+    if (blockMapElement) {
       flagRenderPins = false;
     }
     window.form.setActiveMap();

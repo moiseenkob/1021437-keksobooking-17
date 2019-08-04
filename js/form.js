@@ -6,7 +6,7 @@
   var MIN_GUEST = 0;
   var ESC_KEYCODE = 27;
   var NUMBER_SYSTEM = 10;
-  var STOCK_VALUE_MAIN_PIN = '603, 440';
+  var STOCK_VALUE_MAIN_PIN = '603, 445';
   var DefaultPositionMainPin = {
     X: 570,
     Y: 375
@@ -23,29 +23,27 @@
     'house': 5000,
     'palace': 10000
   };
-  var selectTimeInElement = document.querySelector('#timein');
-  var selectTimeOutElement = document.querySelector('#timeout');
-  var selectTypeHouseElement = document.querySelector('#type');
-  var selectMinPriceElement = document.querySelector('#price');
-  var selectRoomCounterElement = document.querySelector('#room_number');
-  var guestValueElements = document.querySelectorAll('#capacity option');
-  var selectGuestElement = document.querySelector('#capacity');
-  var titleAdElement = document.querySelector('#title');
-  var textDescriptionElement = document.querySelector('#description');
-  var wrapperFiltersElement = document.querySelector('.map__filters');
+  var mainScreenElement = document.querySelector('main');
+  var mapElement = mainScreenElement.querySelector('.map');
+  var wrapperFiltersElement = mapElement.querySelector('.map__filters');
   var comfortElements = wrapperFiltersElement.querySelectorAll('fieldset');
   var selectFiltersElements = wrapperFiltersElement.querySelectorAll('select');
-  var timeFormElement = document.querySelector('.ad-form__element--time');
-  var fieldsFormElements = document.querySelectorAll('.ad-form fieldset');
-  var addressElement = document.querySelector('input[name="address"]');
   var formMainElement = document.querySelector('.ad-form');
-  var featuresElement = document.querySelectorAll('.features input');
-  var mainScreenElement = document.querySelector('main');
+  var selectTimeInElement = formMainElement.querySelector('#timein');
+  var selectTimeOutElement = formMainElement.querySelector('#timeout');
+  var selectTypeHouseElement = formMainElement.querySelector('#type');
+  var selectMinPriceElement = formMainElement.querySelector('#price');
+  var selectRoomCounterElement = formMainElement.querySelector('#room_number');
+  var guestValueElements = formMainElement.querySelectorAll('#capacity option');
+  var selectGuestElement = formMainElement.querySelector('#capacity');
+  var titleAdElement = formMainElement.querySelector('#title');
+  var textDescriptionElement = formMainElement.querySelector('#description');
+  var timeFormElement = formMainElement.querySelector('.ad-form__element--time');
+  var fieldsFormElements = formMainElement.querySelectorAll('.ad-form fieldset');
+  var addressElement = formMainElement.querySelector('input[name="address"]');
   var buttonResetElement = formMainElement.querySelector('.ad-form__reset');
-  var mapElement = document.querySelector('.map');
-  var templateSuccessMessage = document.querySelector('#success').content.querySelector('.success');
-  var templateErrorMessage = document.querySelector('#error').content.querySelector('.error');
-  var dataRooms = [];
+  var successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
+  var errorMessageTemplate = document.querySelector('#error').content.querySelector('.error');
   var roomCountStock = '1';
   var guestCountStock = '3';
   var blockMessage;
@@ -60,8 +58,7 @@
 
   var onSetChangeRoomCount = function (evt) {
     roomCountStock = evt.target.value;
-    dataRooms = valueToCountRooms[evt.target.value];
-    setBorderRoomCount(guestValueElements, dataRooms);
+    setBorderRoomCount(guestValueElements, valueToCountRooms[evt.target.value]);
     onSetGuestValidation(roomCountStock, guestCountStock);
   };
 
@@ -105,17 +102,20 @@
   var setDefaultValueFormAndArea = function () {
     titleAdElement.value = '';
     selectMinPriceElement.value = '';
+    selectMinPriceElement.placeholder = '1000';
+    selectMinPriceElement.min = '1000';
     textDescriptionElement.value = '';
     window.loadPhotos.setDefaultAvatar();
     formMainElement.classList.add('ad-form--disabled');
     wrapperFiltersElement.classList.add('ad-form--disabled');
-    wrapperFiltersElement.reset();
     mapElement.classList.add('map--faded');
     addAttributeDisabled(selectFiltersElements);
     addAttributeDisabled(fieldsFormElements);
     addAttributeDisabled(comfortElements);
-    setFeaturesDisabled(featuresElement);
+    formMainElement.reset();
     window.loadPhotos.reset();
+    wrapperFiltersElement.reset();
+    setDefaultValueCountGuest();
     window.initial.pinBase.addEventListener('click', window.initial.onPinMainClick);
   };
 
@@ -129,13 +129,13 @@
     window.pins.remove();
     // Remove cards
     var firstCardElement = document.querySelector('.map__card');
-    if (firstCardElement !== null) {
+    if (firstCardElement) {
       firstCardElement.parentNode.removeChild(firstCardElement);
     }
   };
 
   var getSuccessfulMessage = function () {
-    blockMessage = templateSuccessMessage.cloneNode(true);
+    blockMessage = successMessageTemplate.cloneNode(true);
     mainScreenElement.appendChild(blockMessage);
     clearFieldAndPins();
   };
@@ -145,7 +145,7 @@
   };
 
   var getErrorMessage = function () {
-    blockMessage = templateErrorMessage.cloneNode(true);
+    blockMessage = errorMessageTemplate.cloneNode(true);
     mainScreenElement.appendChild(blockMessage);
   };
 
@@ -164,19 +164,10 @@
     evt.preventDefault();
   });
 
-  var setFeaturesDisabled = function (fields) {
-    fields.forEach(function (field) {
-      if (field.checked) {
-        field.checked = false;
-      }
-      return field;
-    });
-  };
-
   /* The function of adding the attribute Disabled*/
   var addAttributeDisabled = function (arr) {
     for (var i = 0; i < arr.length; i++) {
-      arr[i].setAttribute('disabled', '');
+      arr[i].disabled = true;
     }
   };
 
@@ -194,7 +185,7 @@
 
   var setActiveField = function () {
     for (var i = 0; i < fieldsFormElements.length; i++) {
-      fieldsFormElements[i].removeAttribute('disabled');
+      fieldsFormElements[i].disabled = false;
     }
     formMainElement.classList.remove('ad-form--disabled');
   };

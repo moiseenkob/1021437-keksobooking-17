@@ -2,7 +2,7 @@
 
 (function () {
 
-  var templateCardElement = document.querySelector('#card').content.querySelector('.map__card');
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var typesToValues = {
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
@@ -11,9 +11,9 @@
   };
 
   var removeActivePin = function () {
-    var activePinElements = document.querySelector('.map__pin--active');
-    if (activePinElements !== null) {
-      activePinElements.classList.remove('map__pin--active');
+    var activePinElement = document.querySelector('.map__pin--active');
+    if (activePinElement) {
+      activePinElement.classList.remove('map__pin--active');
     }
   };
 
@@ -53,7 +53,7 @@
   var renderInfo = function (item) {
 
     removeActivePin();
-    var cardElements = templateCardElement.cloneNode(true);
+    var cardElements = cardTemplate.cloneNode(true);
 
     // Find elements cards
     var titleCardsElement = cardElements.querySelector('.popup__title');
@@ -86,7 +86,7 @@
 
     // Set value of card
     var setFieldsWithData = function (fieldCard, fieldDataOfServer) {
-      if (fieldDataOfServer !== '') {
+      if (fieldDataOfServer) {
         fieldCard.textContent = fieldDataOfServer;
       } else {
         fieldCard.remove();
@@ -94,13 +94,13 @@
     };
 
     var setAvatarCard = function (fieldCard, fieldDataOfServer) {
-      if (fieldDataOfServer !== '') {
+      if (fieldDataOfServer) {
         fieldCard.src = fieldDataOfServer;
       } else {
         fieldCard.remove();
       }
     };
-    // offer.rooms > 0 ? formatCapacity(offer) : ''
+
     setFieldsWithData(titleCardsElement, item.offer.title);
     setFieldsWithData(addressCardsElement, item.offer.address);
     setFieldsWithData(priceCardsElement, item.offer.price + '₽/ночь.');
@@ -112,7 +112,7 @@
     setAvatarCard(avatarCardsElement, item.author.avatar);
     setPhotosCard(item.offer.photos, photosCardsElement);
     setFeatureCard(item.offer.features, featuresCardsElement);
-    window.form.mapElement.insertBefore(cardElements, window.pins.areaElement.nextSibling);
+    window.form.mapElement.insertBefore(cardElements, window.pins.wrapperElement.nextSibling);
   };
 
   window.card = renderInfo;
